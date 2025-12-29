@@ -1,8 +1,10 @@
 package com.example.decasaapps
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -23,6 +25,9 @@ class MainActivity : AppCompatActivity() {
     // ImageView untuk notifikasi
     private lateinit var ivNotifikasi: ImageView
 
+    // LinearLayout untuk Search Button
+    private lateinit var btnSearch: LinearLayout
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -34,10 +39,13 @@ class MainActivity : AppCompatActivity() {
         // 2. Setup Click Listener untuk Notifikasi
         setupNotificationClick()
 
-        // 3. Panggil Data API
+        // 3. Setup Click Listener untuk Search
+        setupSearchClick()
+
+        // 4. Panggil Data API
         fetchDataFromApi()
 
-        // 4. Atur Padding System Bar
+        // 5. Atur Padding System Bar
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -52,6 +60,9 @@ class MainActivity : AppCompatActivity() {
 
         // ImageView Notifikasi (sesuaikan dengan ID di XML Anda)
         ivNotifikasi = findViewById(R.id.ivNotification)
+
+        // LinearLayout Search Button
+        btnSearch = findViewById(R.id.btnSearch)
 
         // Setting Layout Manager
         rvPopular.layoutManager = LinearLayoutManager(
@@ -72,6 +83,14 @@ class MainActivity : AppCompatActivity() {
                 .replace(R.id.fragmentContainer, NotifikasiFragment())
                 .addToBackStack(null) // Agar bisa kembali dengan tombol back
                 .commit()
+        }
+    }
+
+    private fun setupSearchClick() {
+        btnSearch.setOnClickListener {
+            // Pindah ke SearchActivity
+            val intent = Intent(this, SearchActivity::class.java)
+            startActivity(intent)
         }
     }
 

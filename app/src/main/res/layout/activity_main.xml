@@ -92,6 +92,7 @@
                 app:cardElevation="0dp">
 
                 <LinearLayout
+                    android:id="@+id/btnSearch"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal"
@@ -115,6 +116,10 @@
                         android:src="@drawable/ic_search"
                         app:tint="#999999" />
                 </LinearLayout>
+                <FrameLayout
+                    android:id="@+id/SearchFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
