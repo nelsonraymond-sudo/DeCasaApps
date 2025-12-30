@@ -7,11 +7,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-private val ChatItem.name: Any
-private val ChatItem.message: Any
-private val ChatItem.time: Any
-private val ChatItem.avatar: Int
-
 class ChatAdapter(private val chatList: List<ChatItem>) :
     RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
