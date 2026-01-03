@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+
+    <!-- White/Blue Sticker Background -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#CCCCCC"
+        android:strokeWidth="2"
+        android:pathData="M60,40 h80 v100 h-80 z"
+        android:strokeLineJoin="round"/>
+        
+    <!-- Blue Paper Header -->
+    <path
+        android:fillColor="#42A5F5"
+        android:pathData="M62,42 h76 v40 h-76 z"/>
+        
+    <!-- Text Lines -->
+    <path
+        android:fillColor="#BBDEFB"
+        android:pathData="M70,50 h60 v4 h-60 z
+                          M70,60 h40 v4 h-40 z
+                          M70,70 h50 v4 h-50 z"/>
+                          
+    <!-- Rolled Paper Bottom -->
+    <path
+        android:fillColor="#90CAF9"
+        android:pathData="M55,130 
+                          a15,15 0 0 1 15,-15 
+                          h60 
+                          a15,15 0 0 1 15,15 
+                          v10 
+                          a15,15 0 0 1 -15,15 
+                          h-60 
+                          a15,15 0 0 1 -15,-15 z"/>
+                          
+    <!-- Inner Roll Darker -->
+    <circle
+        android:cx="70"
+        android:cy="138"
+        android:r="5"
+        android:fillColor="#1565C0"/>
+
+</vector>

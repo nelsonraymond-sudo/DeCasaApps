@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FFFFFF"
+    android:padding="16dp"
+    tools:context=".BookingActivity">
+
+    <!-- Header -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_back_arrow"
+            app:tint="#000000" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="List of\nBook Dates"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <!-- Calendar Card -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="4dp"
+        app:cardBackgroundColor="#FFFFFF"
+        android:layout_marginBottom="24dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Month Header -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/button_outline_rounded"
+                    android:paddingHorizontal="24dp"
+                    android:paddingVertical="8dp"
+                    android:text="July"
+                    android:textStyle="bold"
+                    android:textColor="#000000" />
+            </RelativeLayout>
+
+            <!-- Navigation Arrows (Visual Only for now as per design) -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"> <!-- Hidden as per new thought, layout above matches design better without arrows inside card directly next to month in that specific style, assume they overlay or separate -->
+             </RelativeLayout>
+             
+             <!-- Wait design shows arrows OUTSIDE the detailed month container but integrated? 
+                  The screenshot shows arrows left and right of the grid area actually. 
+                  Let's implement them overlaying the grid or side by side.
+                  Actually, looking at the image, there are arrows on the Left and Right of the calendar grid.
+             -->
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!-- Calendar Content -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <!-- Day Headers -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:background="#F5F5F5"
+                        android:paddingVertical="8dp"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView android:layout_weight="1" android:layout_width="0dp" android:layout_height="wrap_content" android:gravity="center" android:text="S" android:textColor="#999999"/>
+                        <TextView android:layout_weight="1" android:layout_width="0dp" android:layout_height="wrap_content" android:gravity="center" android:text="S" android:textColor="#999999"/>
+                        <TextView android:layout_weight="1" android:layout_width="0dp" android:layout_height="wrap_content" android:gravity="center" android:text="R" android:textColor="#999999"/>
+                        <TextView android:layout_weight="1" android:layout_width="0dp" android:layout_height="wrap_content" android:gravity="center" android:text="K" android:textColor="#999999"/>
+                        <TextView android:layout_weight="1" android:layout_width="0dp" android:layout_height="wrap_content" android:gravity="center" android:text="J" android:textColor="#999999"/>
+                        <TextView android:layout_weight="1" android:layout_width="0dp" android:layout_height="wrap_content" android:gravity="center" android:text="S" android:textColor="#999999"/>
+                        <TextView android:layout_weight="1" android:layout_width="0dp" android:layout_height="wrap_content" android:gravity="center" android:text="M" android:textColor="#999999"/>
+                    </LinearLayout>
+
+                    <!-- Dates Grid -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvCalendar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:overScrollMode="never"/>
+                </LinearLayout>
+
+                <!-- Arrows Overlay -->
+                <!-- Left Arrow -->
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_back_arrow"
+                    android:background="#717C6D"
+                    android:padding="8dp"
+                    app:tint="#FFFFFF"
+                    android:layout_gravity="center_vertical|start"
+                    android:layout_marginStart="-12dp"
+                    android:translationX="-10dp"/> 
+
+                <!-- Right Arrow (Rotated Back Arrow) -->
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_back_arrow"
+                    android:rotation="180"
+                    android:background="#717C6D"
+                    android:padding="8dp"
+                    app:tint="#FFFFFF"
+                    android:layout_gravity="center_vertical|end"
+                    android:layout_marginEnd="-12dp"
+                    android:translationX="10dp"/>
+            </FrameLayout>
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Legend -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="24dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+            <View android:layout_width="16dp" android:layout_height="16dp" android:background="#FFC107" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Has been Rented" android:layout_marginStart="8dp" android:textColor="#FFC107"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
+            <View android:layout_width="16dp" android:layout_height="16dp" android:background="#E0E0E0" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Empty" android:layout_marginStart="8dp" android:textColor="#666666"/>
+        </LinearLayout>
+        
+        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#E0E0E0" android:layout_marginBottom="16dp"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <View android:layout_width="16dp" android:layout_height="16dp" android:background="#9ACD65" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Already Booked" android:layout_marginStart="8dp" android:textColor="#9ACD65"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1"/>
+
+    <!-- Booking Button -->
+    <Button
+        android:id="@+id/btnBooking"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:text="Booking"
+        android:textAllCaps="false"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/button_primary"
+        android:backgroundTint="#E8A918"/> <!-- Yellow color -->
+
+</LinearLayout>

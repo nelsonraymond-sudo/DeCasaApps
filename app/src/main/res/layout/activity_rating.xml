@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FFFFFF"
+    android:padding="16dp"
+    tools:context=".RatingActivity">
+
+    <!-- Header -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_back_arrow"
+            app:tint="#000000" />
+
+        <TextView
+            android:id="@+id/tvRatingTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_toEndOf="@id/btnBack"
+            android:layout_centerVertical="true"
+            android:text="Millie Housing"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <!-- Rating Summary Card -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="#F9F9F9"
+        android:layout_marginBottom="24dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp"
+            android:gravity="center_vertical">
+            
+            <!-- Progress Bars -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                
+                <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp">
+                    <TextView android:text="5" android:textSize="12sp" android:textColor="#666666" android:layout_width="16dp" android:layout_height="wrap_content"/>
+                    <ImageView android:layout_width="10dp" android:layout_height="10dp" android:src="@android:drawable/star_on" app:tint="#FFC107" android:layout_marginEnd="8dp"/>
+                    <ProgressBar android:layout_width="0dp" android:layout_weight="1" android:layout_height="4dp" android:progress="70" style="@style/Widget.AppCompat.ProgressBar.Horizontal" android:progressTint="#6D7865"/>
+                </LinearLayout>
+                
+                <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp">
+                    <TextView android:text="4" android:textSize="12sp" android:textColor="#666666" android:layout_width="16dp" android:layout_height="wrap_content"/>
+                    <ImageView android:layout_width="10dp" android:layout_height="10dp" android:src="@android:drawable/star_on" app:tint="#FFC107" android:layout_marginEnd="8dp"/>
+                    <ProgressBar android:layout_width="0dp" android:layout_weight="1" android:layout_height="4dp" android:progress="50" style="@style/Widget.AppCompat.ProgressBar.Horizontal" android:progressTint="#6D7865"/>
+                </LinearLayout>
+                
+                <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp">
+                    <TextView android:text="3" android:textSize="12sp" android:textColor="#666666" android:layout_width="16dp" android:layout_height="wrap_content"/>
+                    <ImageView android:layout_width="10dp" android:layout_height="10dp" android:src="@android:drawable/star_on" app:tint="#FFC107" android:layout_marginEnd="8dp"/>
+                    <ProgressBar android:layout_width="0dp" android:layout_weight="1" android:layout_height="4dp" android:progress="30" style="@style/Widget.AppCompat.ProgressBar.Horizontal" android:progressTint="#6D7865"/>
+                </LinearLayout>
+                
+                <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp">
+                    <TextView android:text="2" android:textSize="12sp" android:textColor="#666666" android:layout_width="16dp" android:layout_height="wrap_content"/>
+                    <ImageView android:layout_width="10dp" android:layout_height="10dp" android:src="@android:drawable/star_on" app:tint="#FFC107" android:layout_marginEnd="8dp"/>
+                    <ProgressBar android:layout_width="0dp" android:layout_weight="1" android:layout_height="4dp" android:progress="10" style="@style/Widget.AppCompat.ProgressBar.Horizontal" android:progressTint="#6D7865"/>
+                </LinearLayout>
+
+                <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">
+                    <TextView android:text="1" android:textSize="12sp" android:textColor="#666666" android:layout_width="16dp" android:layout_height="wrap_content"/>
+                    <ImageView android:layout_width="10dp" android:layout_height="10dp" android:src="@android:drawable/star_on" app:tint="#FFC107" android:layout_marginEnd="8dp"/>
+                    <ProgressBar android:layout_width="0dp" android:layout_weight="1" android:layout_height="4dp" android:progress="5" style="@style/Widget.AppCompat.ProgressBar.Horizontal" android:progressTint="#6D7865"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Big Rating -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="end"
+                android:layout_marginStart="16dp">
+                
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4.0"
+                    android:textSize="32sp"
+                    android:textStyle="bold"
+                    android:textColor="#000000"/>
+                
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="4dp">
+                    <ImageView android:layout_width="12dp" android:layout_height="12dp" android:src="@android:drawable/star_on" app:tint="#FFC107"/>
+                    <ImageView android:layout_width="12dp" android:layout_height="12dp" android:src="@android:drawable/star_on" app:tint="#FFC107"/>
+                    <ImageView android:layout_width="12dp" android:layout_height="12dp" android:src="@android:drawable/star_on" app:tint="#FFC107"/>
+                    <ImageView android:layout_width="12dp" android:layout_height="12dp" android:src="@android:drawable/star_on" app:tint="#FFC107"/>
+                    <ImageView android:layout_width="12dp" android:layout_height="12dp" android:src="@drawable/ic_star" app:tint="#CCCCCC"/>
+                </LinearLayout>
+                
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="52 Reviews"
+                    android:textSize="12sp"
+                    android:textColor="#666666"/>
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+    
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvReviews"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+        
+    <Button
+        android:id="@+id/btnWriteReview"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:text="Write Review"
+        android:textAllCaps="false"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/button_primary"
+        android:backgroundTint="#6D7865"/> 
+
+</LinearLayout>

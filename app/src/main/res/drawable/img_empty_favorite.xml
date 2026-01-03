@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+
+    <!-- Light Purple Circle Background -->
+    <path
+        android:fillColor="#E6E6FA"
+        android:pathData="M100,100m-80,0a80,80 0,1,1 160,0a80,80 0,1,1 -160,0" />
+
+    <!-- Square Container -->
+    <path
+        android:fillColor="#FFFDD0"
+        android:strokeColor="#3E2723"
+        android:strokeWidth="4"
+        android:pathData="M60,60 h80 v80 h-80 z" 
+        android:strokeLineJoin="round"
+        android:strokeLineCap="round"/>
+
+    <!-- Heart Icon -->
+    <path
+        android:fillColor="#F44336"
+        android:strokeColor="#3E2723"
+        android:strokeWidth="2"
+        android:pathData="M100,125
+        C75,100 50,75 50,50
+        A25,25 0,0,1 100,50
+        A25,25 0,0,1 150,50
+        C150,75 125,100 100,125 Z"
+        android:trimPathStart="0"
+        android:trimPathEnd="1"
+        android:translateX="0"
+        android:translateY="20"
+        android:scaleX="0.7"
+        android:scaleY="0.7"
+        android:pivotX="100"
+        android:pivotY="80"/>
+        
+    <!-- Decorative Dots -->
+    <circle android:cx="40" android:cy="110" android:r="5" android:fillColor="#FFEB3B"/>
+    <circle android:cx="160" android:cy="90" android:r="5" android:fillColor="#FFEB3B"/>
+    <circle android:cx="130" android:cy="40" android:r="6" android:fillColor="#FFEB3B"/>
+    
+</vector>
