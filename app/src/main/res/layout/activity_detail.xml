@@ -44,10 +44,14 @@
             android:padding="24dp">
 
             <LinearLayout
+                android:id="@+id/layoutRating"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -252,6 +256,7 @@
         </LinearLayout>
 
         <Button
+            android:id="@+id/btnRent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Rentals"
@@ -260,6 +265,7 @@
             android:layout_marginEnd="8dp"/>
 
         <Button
+            android:id="@+id/btnBuy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Buy"

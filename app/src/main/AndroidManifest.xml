@@ -20,6 +20,30 @@
             android:name=".SearchActivity"
             android:exported="false" />
         <activity
+            android:name=".HouseActivity"
+            android:exported="false" />
+        <activity
+            android:name=".BookingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SearchInputActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PaymentMethodActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ReviewSummaryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".EReceiptActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RatingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AddReviewActivity"
+            android:exported="false" />
+        <activity
             android:name=".DetailActivity"
             android:exported="false" />
         <activity

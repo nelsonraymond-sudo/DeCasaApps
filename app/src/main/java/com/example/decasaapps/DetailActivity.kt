@@ -24,5 +24,17 @@ class DetailActivity : AppCompatActivity() {
         // 3. Pasang ke Teks
         findViewById<TextView>(R.id.tvDetailTitle).text = title
         findViewById<TextView>(R.id.tvDetailLocation).text = location
+
+        // 4. Link ke Booking Page
+        findViewById<android.widget.Button>(R.id.btnRent).setOnClickListener {
+            val intent = android.content.Intent(this, BookingActivity::class.java)
+            startActivity(intent)
+        }
+
+        // 5. Link ke Rating Page
+        findViewById<android.view.View>(R.id.layoutRating).setOnClickListener {
+            val intent = android.content.Intent(this, RatingActivity::class.java)
+            startActivity(intent)
+        }
     }
 }

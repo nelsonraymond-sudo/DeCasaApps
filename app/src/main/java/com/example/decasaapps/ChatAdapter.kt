@@ -12,8 +12,10 @@ private val ChatItem.message: Any
 private val ChatItem.time: Any
 private val ChatItem.avatar: Int
 
-class ChatAdapter(private val chatList: List<ChatItem>) :
-    RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
+class ChatAdapter(
+    private val chatList: List<ChatItem>,
+    private val onItemClick: (ChatItem) -> Unit
+) : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
     inner class ChatViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val avatarImageView: ImageView = itemView.findViewById(R.id.avatarImageView)
@@ -38,7 +40,7 @@ class ChatAdapter(private val chatList: List<ChatItem>) :
 
         // Handle item click
         holder.itemView.setOnClickListener {
-            // Navigate to chat detail
+            onItemClick(chatItem)
         }
     }
 

@@ -16,5 +16,9 @@ class EditProfile : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        findViewById<android.widget.ImageView>(R.id.btnBack).setOnClickListener {
+            finish()
+        }
     }
 }

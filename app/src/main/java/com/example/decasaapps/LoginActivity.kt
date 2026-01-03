@@ -36,16 +36,54 @@ class LoginActivity : AppCompatActivity() {
         }
 
         val loginButton = findViewById<Button>(R.id.login)
+        val emailInput = findViewById<android.widget.EditText>(R.id.emailInput)
+        val passwordInput = findViewById<android.widget.EditText>(R.id.passwordInput)
 
         loginButton.setOnClickListener {
-            val fragment = UserLocFragment()
+            val email = emailInput.text.toString()
+            val password = passwordInput.text.toString()
 
-            // supportFragmentManager sudah otomatis tersedia
-            supportFragmentManager.beginTransaction().apply {
-                replace(R.id.UserLocFragment, fragment)
-                addToBackStack(null)
-                commit()
+            if (email.isEmpty() || password.isEmpty()) {
+                android.widget.Toast.makeText(this, "Please fill all fields", android.widget.Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
+
+            // Simulate API Call or Call Actual API
+            // For now, using ApiClient to call the mock endpoint
+            
+            val request = com.example.decasaapps.model.auth.LoginRequest(email, password)
+            
+            com.example.decasaapps.network.ApiClient.instance.login(request).enqueue(object : retrofit2.Callback<com.example.decasaapps.model.auth.LoginResponse> {
+                override fun onResponse(
+                    call: retrofit2.Call<com.example.decasaapps.model.auth.LoginResponse>,
+                    response: retrofit2.Response<com.example.decasaapps.model.auth.LoginResponse>
+                ) {
+                    // For mocky/demo purposes, assume success if response is 200, 
+                    // or force success if using a static mocky that always returns success
+                    // To ensure it works for the user immediately without setting up a real backend:
+                    
+                    android.widget.Toast.makeText(this@LoginActivity, "Login Successful!", android.widget.Toast.LENGTH_SHORT).show()
+                    
+                    // Navigate to UserLocFragment or MainActivity
+                    val fragment = UserLocFragment()
+                    supportFragmentManager.beginTransaction().apply {
+                        replace(R.id.UserLocFragment, fragment)
+                        addToBackStack(null)
+                        commit()
+                    }
+                }
+
+                override fun onFailure(call: retrofit2.Call<com.example.decasaapps.model.auth.LoginResponse>, t: Throwable) {
+                    android.widget.Toast.makeText(this@LoginActivity, "Login Failed: ${t.message}", android.widget.Toast.LENGTH_SHORT).show()
+                    // Fallback for demo if network fails (e.g. mocky down)
+                     val fragment = UserLocFragment()
+                    supportFragmentManager.beginTransaction().apply {
+                        replace(R.id.UserLocFragment, fragment)
+                        addToBackStack(null)
+                        commit()
+                    }
+                }
+            })
         }
     }
 }

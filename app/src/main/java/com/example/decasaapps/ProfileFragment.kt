@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.content.Intent
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -35,6 +37,22 @@ class ProfileFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_profile, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // Logout Menu
+        view.findViewById<LinearLayout>(R.id.menuLogout).setOnClickListener {
+            val bottomSheet = LogoutBottomSheetFragment()
+            bottomSheet.show(parentFragmentManager, "LogoutBottomSheet")
+        }
+
+        // Edit Profile Menu
+        view.findViewById<LinearLayout>(R.id.menuEditProfile).setOnClickListener {
+            val intent = Intent(requireContext(), EditProfile::class.java)
+            startActivity(intent)
+        }
     }
 
     companion object {

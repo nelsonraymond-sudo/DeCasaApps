@@ -1,12 +1,178 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FFFFFF"
+    android:padding="24dp"
     tools:context=".EditProfile">
 
+    <!-- Header -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp">
 
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_back_arrow"
+            app:tint="#000000" />
 
-</RelativeLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Your Profile"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <!-- Profile Image -->
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="32dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/potoo"
+            app:civ_border_width="2dp"
+            app:civ_border_color="#CCCCCC" />
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignEnd="@+id/ivProfile"
+            android:layout_alignBottom="@+id/ivProfile"
+            android:layout_marginEnd="4dp"
+            android:layout_marginBottom="4dp"
+            android:src="@drawable/ic_camera"
+            android:background="@drawable/circle_background_gray"
+            android:padding="4dp"
+            android:layout_marginLeft="70dp"
+            android:layout_marginTop="70dp"/>
+    </RelativeLayout>
+
+    <!-- Form -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Name -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Name"
+                android:textColor="#333333"
+                android:textSize="16sp"
+                android:layout_marginBottom="8dp"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/bg_input_gray"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="Yoana Dovina Fallen"
+                android:textColor="#666666"
+                android:textSize="16sp"
+                android:layout_marginBottom="16dp"
+                android:importantForAutofill="no"
+                android:inputType="textPersonName"/>
+
+            <!-- Date of Birth -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Date of Birth"
+                android:textColor="#333333"
+                android:textSize="16sp"
+                android:layout_marginBottom="8dp"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/bg_input_gray"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="24/06/2006"
+                android:textColor="#666666"
+                android:textSize="16sp"
+                android:layout_marginBottom="16dp"
+                android:importantForAutofill="no"
+                android:inputType="date"/>
+
+            <!-- Phone Number -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Phone Number"
+                android:textColor="#333333"
+                android:textSize="16sp"
+                android:layout_marginBottom="8dp"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/bg_input_gray"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="081898769853"
+                android:textColor="#666666"
+                android:textSize="16sp"
+                android:layout_marginBottom="16dp"
+                android:importantForAutofill="no"
+                android:inputType="phone"/>
+
+            <!-- Gender -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gender"
+                android:textColor="#333333"
+                android:textSize="16sp"
+                android:layout_marginBottom="8dp"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/bg_input_gray"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="Female"
+                android:textColor="#666666"
+                android:textSize="16sp"
+                android:layout_marginBottom="32dp"
+                android:importantForAutofill="no"
+                android:inputType="text"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Update Button -->
+    <Button
+        android:id="@+id/btnUpdate"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:text="Update Profile"
+        android:backgroundTint="#717C6D"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        android:textAllCaps="false"/>
+
+</LinearLayout>

@@ -168,6 +168,7 @@
 
                 <!-- House -->
                 <LinearLayout
+                    android:id="@+id/btnCategoryHouse"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -200,6 +201,7 @@
 
                 <!-- Apartment -->
                 <LinearLayout
+                    android:id="@+id/btnCategoryApartment"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -231,6 +233,7 @@
 
                 <!-- Villa -->
                 <LinearLayout
+                    android:id="@+id/btnCategoryVilla"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -262,6 +265,7 @@
 
                 <!-- Costs -->
                 <LinearLayout
+                    android:id="@+id/btnCategoryCosts"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
