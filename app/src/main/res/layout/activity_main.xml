@@ -39,7 +39,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Location"
+                    android:text="@string/location"
                     android:textColor="#B0B0B0"
                     android:textSize="12sp" />
 
@@ -66,13 +66,6 @@
                 android:padding="10dp"
                 android:src="@drawable/ic_notifikasi"
                 app:tint="@color/white" />
-
-            <FrameLayout
-                android:id="@+id/fragmentContainer"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone"
-                android:background="#FFFFFF" />
 
         </RelativeLayout>
 
@@ -105,10 +98,14 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:hint="Search"
+                        android:autofillHints=""
+                        android:background="@null"
+                        android:hint="@string/search"
+                        android:inputType="TODO"
+                        android:minHeight="48dp"
                         android:textColorHint="#999999"
                         android:textSize="14sp"
-                        android:background="@null"/>
+                        tools:ignore="TextContrastCheck" />
 
                     <ImageView
                         android:layout_width="20dp"
@@ -193,7 +190,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="House"
+                        android:text="@string/house"
                         android:textSize="12sp"
                         android:textColor="#666666"
                         android:layout_marginTop="8dp" />
@@ -225,7 +222,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Apartment"
+                        android:text="@string/apartment"
                         android:textSize="12sp"
                         android:textColor="#666666"
                         android:layout_marginTop="8dp" />
@@ -257,7 +254,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Villa"
+                        android:text="@string/villa"
                         android:textSize="12sp"
                         android:textColor="#666666"
                         android:layout_marginTop="8dp" />
@@ -289,7 +286,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Costs"
+                        android:text="@string/costs"
                         android:textSize="12sp"
                         android:textColor="#666666"
                         android:layout_marginTop="8dp" />
@@ -305,7 +302,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Popular"
+                    android:text="@string/popular"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="#333333" />
@@ -314,7 +311,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:text="See all"
+                    android:text="@string/see_all"
                     android:textSize="14sp"
                     android:textColor="#4CAF50" />
             </RelativeLayout>
@@ -337,7 +334,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Recommend for you"
+                    android:text="@string/recommend_for_you"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="#333333" />
@@ -346,7 +343,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:text="See all"
+                    android:text="@string/seeall"
                     android:textSize="14sp"
                     android:textColor="#4CAF50" />
             </RelativeLayout>
@@ -362,6 +359,16 @@
                 tools:listitem="@layout/item_property" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+
+    <!-- Fragment Container -->
+    <FrameLayout
+        android:id="@+id/fragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        android:background="#FFFFFF"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigation"/>
 
     <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView

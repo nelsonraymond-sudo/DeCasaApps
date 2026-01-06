@@ -11,6 +11,7 @@ activity = "1.12.0"
 constraintlayout = "2.2.1"
 material3 = "1.4.0"
 composeMaterial = "1.5.5"
+googleServices = "4.4.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -27,4 +28,5 @@ androidx-compose-material = { group = "androidx.wear.compose", name = "compose-m
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
 

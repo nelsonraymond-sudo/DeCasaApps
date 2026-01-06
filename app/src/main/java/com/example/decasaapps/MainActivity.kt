@@ -196,15 +196,48 @@ class MainActivity : AppCompatActivity() {
 
                 if (responseList.isNotEmpty()) {
                     rvPopular.adapter = PropertyAdapter(responseList)
-                    rvRecommended.adapter = PropertyAdapter(responseList)
+                    rvRecommended.adapter = PropertyAdapter(responseList.shuffled()) // Shuffle for variety
                 } else {
-                    Toast.makeText(this@MainActivity, "Data Kosong", Toast.LENGTH_SHORT).show()
+                    loadDummyData()
                 }
 
             } catch (e: Exception) {
                 Log.e("API_ERROR", "Error: ${e.message}")
-                Toast.makeText(this@MainActivity, "Gagal memuat data", Toast.LENGTH_SHORT).show()
+                loadDummyData()
             }
         }
+    }
+
+    private fun loadDummyData() {
+        val dummyList = listOf(
+            PropertyData(
+                name = "Luxury Villa Bali",
+                location = "Bali, Indonesia",
+                rating = 4.8f,
+                imageUrl = "https://images.unsplash.com/photo-1580587771525-78b9dba3b91d?w=500"
+            ),
+            PropertyData(
+                name = "Modern Apartment",
+                location = "Jakarta, Indonesia",
+                rating = 4.5f,
+                imageUrl = "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=500"
+            ),
+            PropertyData(
+                name = "Cozy House Bandung",
+                location = "Bandung, Indonesia",
+                rating = 4.7f,
+                imageUrl = "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=500"
+            ),
+            PropertyData(
+                name = "Beachfront Villa",
+                location = "Lombok, Indonesia",
+                rating = 4.9f,
+                imageUrl = "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=500"
+            )
+        )
+        
+        rvPopular.adapter = PropertyAdapter(dummyList)
+        rvRecommended.adapter = PropertyAdapter(dummyList.shuffled())
+        Toast.makeText(this@MainActivity, "Using Mock Data", Toast.LENGTH_SHORT).show()
     }
 }

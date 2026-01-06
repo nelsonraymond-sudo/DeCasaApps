@@ -38,10 +38,8 @@
                           a15,15 0 0 1 -15,-15 z"/>
                           
     <!-- Inner Roll Darker -->
-    <circle
-        android:cx="70"
-        android:cy="138"
-        android:r="5"
-        android:fillColor="#1565C0"/>
+    <path
+        android:fillColor="#1565C0"
+        android:pathData="M 70,138 m -5,0 a 5,5 0 1,0 10,0 a 5,5 0 1,0 -10,0"/>
 
 </vector>

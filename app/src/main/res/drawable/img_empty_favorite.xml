@@ -39,8 +39,8 @@
         android:pivotY="80"/>
         
     <!-- Decorative Dots -->
-    <circle android:cx="40" android:cy="110" android:r="5" android:fillColor="#FFEB3B"/>
-    <circle android:cx="160" android:cy="90" android:r="5" android:fillColor="#FFEB3B"/>
-    <circle android:cx="130" android:cy="40" android:r="6" android:fillColor="#FFEB3B"/>
+    <path android:fillColor="#FFEB3B" android:pathData="M 40,110 m -5,0 a 5,5 0 1,0 10,0 a 5,5 0 1,0 -10,0" />
+    <path android:fillColor="#FFEB3B" android:pathData="M 160,90 m -5,0 a 5,5 0 1,0 10,0 a 5,5 0 1,0 -10,0" />
+    <path android:fillColor="#FFEB3B" android:pathData="M 130,40 m -6,0 a 6,6 0 1,0 12,0 a 6,6 0 1,0 -12,0" />
     
 </vector>

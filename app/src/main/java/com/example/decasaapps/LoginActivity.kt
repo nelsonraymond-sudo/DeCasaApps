@@ -62,6 +62,15 @@ class LoginActivity : AppCompatActivity() {
                     // or force success if using a static mocky that always returns success
                     // To ensure it works for the user immediately without setting up a real backend:
                     
+                    // Save User Session
+                    val sharedPref = getSharedPreferences("UserSession", android.content.Context.MODE_PRIVATE)
+                    val editor = sharedPref.edit()
+                    val user = response.body()?.user
+                    editor.putString("KEY_NAME", user?.name ?: "User") // Default name if null
+                    editor.putString("KEY_EMAIL", user?.email ?: email) // Use input email if null
+                    editor.putBoolean("KEY_IS_LOGGED_IN", true)
+                    editor.apply()
+
                     android.widget.Toast.makeText(this@LoginActivity, "Login Successful!", android.widget.Toast.LENGTH_SHORT).show()
                     
                     // Navigate to UserLocFragment or MainActivity
@@ -76,6 +85,14 @@ class LoginActivity : AppCompatActivity() {
                 override fun onFailure(call: retrofit2.Call<com.example.decasaapps.model.auth.LoginResponse>, t: Throwable) {
                     android.widget.Toast.makeText(this@LoginActivity, "Login Failed: ${t.message}", android.widget.Toast.LENGTH_SHORT).show()
                     // Fallback for demo if network fails (e.g. mocky down)
+                    // Fallback for demo: Save dummy session
+                    val sharedPref = getSharedPreferences("UserSession", android.content.Context.MODE_PRIVATE)
+                    val editor = sharedPref.edit()
+                    editor.putString("KEY_NAME", "Demo User")
+                    editor.putString("KEY_EMAIL", email)
+                    editor.putBoolean("KEY_IS_LOGGED_IN", true)
+                    editor.apply()
+
                      val fragment = UserLocFragment()
                     supportFragmentManager.beginTransaction().apply {
                         replace(R.id.UserLocFragment, fragment)

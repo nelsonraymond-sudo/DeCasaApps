@@ -8,6 +8,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import android.widget.EditText
+import android.widget.Toast
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.firestore.Query
 
 class ChatDetailFragment : Fragment() {
 
@@ -35,20 +40,99 @@ class ChatDetailFragment : Fragment() {
         rvMessages = view.findViewById(R.id.rvMessages)
         rvMessages.layoutManager = LinearLayoutManager(context)
 
-        // Dummy Data
-        loadDummyMessages()
+        // Initialize Firestore
+        val db = Firebase.firestore
+        
+        // Get Current User ID (Email)
+        val sharedPref = requireContext().getSharedPreferences("UserSession", android.content.Context.MODE_PRIVATE)
+        val currentUserId = sharedPref.getString("KEY_EMAIL", "Guest") ?: "Guest"
 
-        messageAdapter = MessageAdapter(messageList)
+        messageAdapter = MessageAdapter(messageList, currentUserId)
         rvMessages.adapter = messageAdapter
+
+        // Listen for Realtime Updates specific to this user's conversation
+        db.collection("chats")
+            .whereEqualTo("conversationId", currentUserId) // Filter by conversationId (using userId as simplified convId)
+            .orderBy("timestamp", Query.Direction.ASCENDING)
+            .addSnapshotListener { snapshots, e ->
+                if (e != null) {
+                    return@addSnapshotListener
+                }
+
+                if (snapshots != null) {
+                    messageList.clear()
+                    for (doc in snapshots) {
+                        val message = doc.toObject(MessageItem::class.java)
+                        messageList.add(message)
+                    }
+                    messageAdapter.notifyDataSetChanged()
+                    if (messageList.isNotEmpty()) {
+                        rvMessages.scrollToPosition(messageList.size - 1)
+                    }
+                }
+            }
+
+        // Send Message
+        val etMessage = view.findViewById<EditText>(R.id.etMessage)
+        view.findViewById<ImageView>(R.id.btnSend).setOnClickListener {
+            val text = etMessage.text.toString().trim()
+            if (text.isNotEmpty()) {
+                val newMessage = MessageItem(
+                    message = text,
+                    senderId = currentUserId,
+                    conversationId = currentUserId, // Using userId as conversationId for 1-on-1 with Admin
+                    timestamp = System.currentTimeMillis()
+                )
+                
+                db.collection("chats").add(newMessage)
+                    .addOnSuccessListener {
+                        etMessage.text.clear()
+                        rvMessages.scrollToPosition(messageList.size - 1)
+                        simulateAdminReply(db, currentUserId, text)
+                    }
+                    .addOnFailureListener {
+                        Toast.makeText(context, "Failed to send", Toast.LENGTH_SHORT).show()
+                    }
+            }
+        }
     }
 
-    private fun loadDummyMessages() {
-        messageList.add(MessageItem("Halo, ini agent property DeCasa ya?", "10:23", true))
-        messageList.add(MessageItem("Halo, selamat datang di DeCasa \uD83D\uDE0A Betul kak, ada yang bisa kami bantu? Apakah Kakak sedang mencari rumah untuk disewa?", "10:24", false))
-        messageList.add(MessageItem("Iya kak, mau tanya. Villa di kawasan Jogja masih tersedia nggak untuk tanggal 16-19 Juli?", "10:25", true))
-        messageList.add(MessageItem("Baik kak, kami cek dulu ya.\n\uD83D\uDCC5 Tanggal: 16 Juli\n\uD83C\uDFE1 Unit: Villa\nSebentar ya kak...", "10:30", false))
-        messageList.add(MessageItem("Villa masih tersedia untuk tanggal tersebut kak, dengan harga sewa:\n\uD83D\uDD39 Harian: Rp1.500.000\n\uD83D\uDD39 Dengan fasilitas tambahan (kolam pribadi & BBQ set): Rp1.800.000\nApakah Kakak ingin booking villa-nya sekarang??", "10:31", false))
-        messageList.add(MessageItem("Boleh kak, saya mau booking villanya untuk tanggal 10 Juli ya. Pakai yang lengkap dengan fasilitas tambahan aja ya kak \uD83D\uDE4F", "10:28", true))
-        messageList.add(MessageItem("Baik kak, kami catat ya\uD83D\uDE4F", "10:30", false))
+    private fun simulateAdminReply(db: com.google.firebase.firestore.FirebaseFirestore, conversationId: String, userMessage: String) {
+        // Smart Chatbot Logic
+        val lowerCaseMsg = userMessage.toLowerCase(java.util.Locale.getDefault())
+        
+        var replyText = "Terima kasih telah menghubungi kami. Admin akan segera membalas."
+        
+        if (lowerCaseMsg.contains("halo") || lowerCaseMsg.contains("hai") || lowerCaseMsg.contains("hallo") || lowerCaseMsg.contains("pagi") || lowerCaseMsg.contains("siang")) {
+            replyText = "Halo! Selamat datang di DeCasa. Ada yang bisa kami bantu?"
+        } else if (lowerCaseMsg.contains("harga") || lowerCaseMsg.contains("biaya") || lowerCaseMsg.contains("pricelist")) {
+            replyText = "Untuk informasi harga, silakan cek menu Paket Layanan di halaman utama kami."
+        } else if (lowerCaseMsg.contains("lokasi") || lowerCaseMsg.contains("alamat") || lowerCaseMsg.contains("dimana")) {
+            replyText = "Kami melayani area Jabodetabek. Kantor kami berlokasi di Jakarta Selatan."
+        } else if (lowerCaseMsg.contains("booking") || lowerCaseMsg.contains("pesan")) {
+            replyText = "Untuk pemesanan, silakan pilih layanan di menu Home dan ikuti langkah pemesanan."
+        }
+
+        // Delayed response from "Admin"
+        val handler = android.os.Handler(android.os.Looper.getMainLooper())
+        
+        handler.postDelayed({
+            // Check if fragment is still added
+            if (!isAdded) return@postDelayed
+
+            val adminMessage = MessageItem(
+                message = replyText,
+                senderId = "admin", 
+                conversationId = conversationId,
+                timestamp = System.currentTimeMillis()
+            )
+            
+            db.collection("chats").add(adminMessage)
+                .addOnFailureListener { e ->
+                     if (context != null) {
+                        Toast.makeText(context, "Admin reply failed: ${e.message}", Toast.LENGTH_LONG).show()
+                     }
+                }
+        }, 1500) // 1.5 second delay for better UX
     }
 }

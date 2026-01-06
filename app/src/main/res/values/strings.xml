@@ -2,4 +2,14 @@
     <string name="app_name">DeCasaApps</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="location">Location</string>
+    <string name="house">House</string>
+    <string name="apartment">Apartment</string>
+    <string name="villa">Villa</string>
+    <string name="costs">Costs</string>
+    <string name="popular">Popular</string>
+    <string name="recommend_for_you">Recommend for you</string>
+    <string name="see_all">See all</string>
+    <string name="seeall">See all</string>
+    <string name="search">Search</string>
 </resources>

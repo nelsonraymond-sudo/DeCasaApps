@@ -6,14 +6,16 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class MessageAdapter(private val messageList: List<MessageItem>) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MessageAdapter(
+    private val messageList: List<MessageItem>,
+    private val currentUserId: String
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val VIEW_TYPE_SENT = 1
     private val VIEW_TYPE_RECEIVED = 2
 
     override fun getItemViewType(position: Int): Int {
-        return if (messageList[position].isSent) VIEW_TYPE_SENT else VIEW_TYPE_RECEIVED
+        return if (messageList[position].senderId == currentUserId) VIEW_TYPE_SENT else VIEW_TYPE_RECEIVED
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -45,7 +47,10 @@ class MessageAdapter(private val messageList: List<MessageItem>) :
 
         fun bind(message: MessageItem) {
             tvMessage.text = message.message
-            tvTime.text = message.time
+            // Simple date formatting
+            val date = java.util.Date(message.timestamp)
+            val format = java.text.SimpleDateFormat("HH:mm", java.util.Locale.getDefault())
+            tvTime.text = format.format(date)
         }
     }
 
@@ -55,7 +60,10 @@ class MessageAdapter(private val messageList: List<MessageItem>) :
 
         fun bind(message: MessageItem) {
             tvMessage.text = message.message
-            tvTime.text = message.time
+             // Simple date formatting
+            val date = java.util.Date(message.timestamp)
+            val format = java.text.SimpleDateFormat("HH:mm", java.util.Locale.getDefault())
+            tvTime.text = format.format(date)
         }
     }
 }

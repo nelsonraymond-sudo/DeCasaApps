@@ -42,6 +42,17 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Load User Data
+        val sharedPref = requireContext().getSharedPreferences("UserSession", android.content.Context.MODE_PRIVATE)
+        val name = sharedPref.getString("KEY_NAME", "Guest User")
+        val email = sharedPref.getString("KEY_EMAIL", "No Email")
+
+        val tvName = view.findViewById<android.widget.TextView>(R.id.tvProfileName)
+        val tvAddress = view.findViewById<android.widget.TextView>(R.id.tvProfileAddress)
+
+        tvName.text = name
+        tvAddress.text = email // Using address field for email temporarily
+
         // Logout Menu
         view.findViewById<LinearLayout>(R.id.menuLogout).setOnClickListener {
             val bottomSheet = LogoutBottomSheetFragment()
