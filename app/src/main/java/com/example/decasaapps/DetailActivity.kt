@@ -22,6 +22,7 @@ class DetailActivity : AppCompatActivity() {
         val location = intent.getStringExtra("EXTRA_LOCATION") ?: "Ago, Lagos"
         val rating = intent.getStringExtra("EXTRA_RATING") ?: "4.0"
         val imageUrl = intent.getStringExtra("EXTRA_IMAGE")
+        val id = intent.getStringExtra("EXTRA_ID") ?: ""
 
         // 3. Pasang ke Teks
         findViewById<TextView>(R.id.tvDetailTitle).text = name
@@ -44,9 +45,25 @@ class DetailActivity : AppCompatActivity() {
                 .into(ivDetailImage)
         }
 
-        // 4. Link ke Booking Page
+        // 4. Link ke Booking Page (Rentals -> Calendar Availability)
         findViewById<android.widget.Button>(R.id.btnRent).setOnClickListener {
             val intent = android.content.Intent(this, BookingActivity::class.java)
+            intent.putExtra("EXTRA_NAME", name)
+            intent.putExtra("EXTRA_LOCATION", location)
+            intent.putExtra("EXTRA_IMAGE", imageUrl)
+            intent.putExtra("EXTRA_PRICE", findViewById<TextView>(R.id.tvPrice)?.text?.toString() ?: "$4,000/Month") // Try to get from UI or intent
+            intent.putExtra("EXTRA_ID", id)
+            startActivity(intent)
+        }
+
+        // 5. Link ke Payment (Direct Buy -> Payment Method)
+        findViewById<android.widget.Button>(R.id.btnBuy).setOnClickListener {
+            val intent = android.content.Intent(this, PaymentMethodActivity::class.java)
+            intent.putExtra("EXTRA_NAME", name)
+            intent.putExtra("EXTRA_LOCATION", location)
+            intent.putExtra("EXTRA_IMAGE", imageUrl)
+            intent.putExtra("EXTRA_PRICE", "$4,000/Month") 
+            intent.putExtra("EXTRA_ID", id)
             startActivity(intent)
         }
 

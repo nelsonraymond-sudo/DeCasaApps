@@ -7,7 +7,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiClient {
     // Base URL Mocky (Pasti sama untuk semua orang)
-    private const val BASE_URL = "https://mocki.io/"
+    // Base URL Laravel (10.0.2.2 is localhost for Emulator)
+    private const val BASE_URL = "http://10.0.2.2:8000/"
 
     val instance: ApiService by lazy {
 

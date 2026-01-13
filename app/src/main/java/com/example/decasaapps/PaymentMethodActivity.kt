@@ -49,8 +49,16 @@ class PaymentMethodActivity : AppCompatActivity() {
 
         if (selected != null) {
                 // Proceed to Review Summary
-                val intent = android.content.Intent(this, ReviewSummaryActivity::class.java)
-                startActivity(intent)
+                // Proceed to Review Summary
+                val nextIntent = android.content.Intent(this, ReviewSummaryActivity::class.java)
+                // Pass Property Data Forward
+                nextIntent.putExtra("EXTRA_NAME", getIntent().getStringExtra("EXTRA_NAME"))
+                nextIntent.putExtra("EXTRA_LOCATION", getIntent().getStringExtra("EXTRA_LOCATION"))
+                nextIntent.putExtra("EXTRA_IMAGE", getIntent().getStringExtra("EXTRA_IMAGE"))
+                nextIntent.putExtra("EXTRA_PRICE", getIntent().getStringExtra("EXTRA_PRICE"))
+                nextIntent.putExtra("EXTRA_PAYMENT_METHOD", selected)
+                nextIntent.putExtra("EXTRA_ID", getIntent().getStringExtra("EXTRA_ID"))
+                startActivity(nextIntent)
             } else {
                 Toast.makeText(this, "Please select a payment method", Toast.LENGTH_SHORT).show()
             }

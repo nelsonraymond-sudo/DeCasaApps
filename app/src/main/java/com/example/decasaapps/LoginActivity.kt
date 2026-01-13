@@ -7,6 +7,12 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowCompat
 import android.widget.Button
 import android.widget.ImageView
+import com.example.decasaapps.client.Api
+import com.example.decasaapps.client.RetrofitClient
+import com.example.decasaapps.model.auth.LoginResponse
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class LoginActivity : AppCompatActivity() {
 
@@ -40,65 +46,65 @@ class LoginActivity : AppCompatActivity() {
         val passwordInput = findViewById<android.widget.EditText>(R.id.passwordInput)
 
         loginButton.setOnClickListener {
-            val email = emailInput.text.toString()
-            val password = passwordInput.text.toString()
+            val user = emailInput.text.toString().trim()
+            val pwd = passwordInput.text.toString().trim()
 
-            if (email.isEmpty() || password.isEmpty()) {
-                android.widget.Toast.makeText(this, "Please fill all fields", android.widget.Toast.LENGTH_SHORT).show()
+            // cek username not empty
+            if (user.isEmpty()) {
+                emailInput.error = "Email required"
+                emailInput.requestFocus()
+                return@setOnClickListener
+            }
+            // password not empty
+            if (pwd.isEmpty()) {
+                passwordInput.error = "Password required"
+                passwordInput.requestFocus()
                 return@setOnClickListener
             }
 
-            // Simulate API Call or Call Actual API
-            // For now, using ApiClient to call the mock endpoint
-            
-            val request = com.example.decasaapps.model.auth.LoginRequest(email, password)
-            
-            com.example.decasaapps.network.ApiClient.instance.login(request).enqueue(object : retrofit2.Callback<com.example.decasaapps.model.auth.LoginResponse> {
-                override fun onResponse(
-                    call: retrofit2.Call<com.example.decasaapps.model.auth.LoginResponse>,
-                    response: retrofit2.Response<com.example.decasaapps.model.auth.LoginResponse>
-                ) {
-                    // For mocky/demo purposes, assume success if response is 200, 
-                    // or force success if using a static mocky that always returns success
-                    // To ensure it works for the user immediately without setting up a real backend:
-                    
-                    // Save User Session
-                    val sharedPref = getSharedPreferences("UserSession", android.content.Context.MODE_PRIVATE)
-                    val editor = sharedPref.edit()
-                    val user = response.body()?.user
-                    editor.putString("KEY_NAME", user?.name ?: "User") // Default name if null
-                    editor.putString("KEY_EMAIL", user?.email ?: email) // Use input email if null
-                    editor.putBoolean("KEY_IS_LOGGED_IN", true)
-                    editor.apply()
+            // get response from REST API (web service)
+            // get response from REST API (web service)
+            val apiService: Api = RetrofitClient.instance.create(Api::class.java)
 
-                    android.widget.Toast.makeText(this@LoginActivity, "Login Successful!", android.widget.Toast.LENGTH_SHORT).show()
-                    
-                    // Navigate to UserLocFragment or MainActivity
-                    val fragment = UserLocFragment()
-                    supportFragmentManager.beginTransaction().apply {
-                        replace(R.id.UserLocFragment, fragment)
-                        addToBackStack(null)
-                        commit()
+            apiService.postLogin(user, pwd).enqueue(object : Callback<LoginResponse> {
+                override fun onResponse(
+                    call: Call<LoginResponse>,
+                    response: Response<LoginResponse>
+                ) {
+                    val account = response.body()
+                    if (response.isSuccessful && account != null) {
+
+                        // Save User Session (Keep this existing logic for app functionality)
+                        val sharedPref = getSharedPreferences("UserSession", android.content.Context.MODE_PRIVATE)
+                        val editor = sharedPref.edit()
+                        val userData = account.user
+                        
+                        if (userData != null) {
+                            editor.putString("KEY_NAME", userData.name)
+                            editor.putString("KEY_EMAIL", userData.email)
+                            editor.putString("KEY_ID", userData.id)
+                            editor.putString("KEY_LEVEL", userData.level)
+                            editor.putString("KEY_TOKEN", account.token)
+                            editor.putBoolean("KEY_IS_LOGGED_IN", true)
+                        }
+                        editor.apply()
+
+                        android.widget.Toast.makeText(this@LoginActivity, account.message, android.widget.Toast.LENGTH_SHORT).show()
+                        
+                        // Navigate to UserLocFragment (Replacing AccountActivity from screenshot to match app flow)
+                        val fragment = UserLocFragment()
+                        supportFragmentManager.beginTransaction().apply {
+                            replace(R.id.UserLocFragment, fragment)
+                            addToBackStack(null)
+                            commit()
+                        }
+                    } else {
+                        android.widget.Toast.makeText(this@LoginActivity, "Login Failed: ${response.message()}", android.widget.Toast.LENGTH_SHORT).show()
                     }
                 }
 
-                override fun onFailure(call: retrofit2.Call<com.example.decasaapps.model.auth.LoginResponse>, t: Throwable) {
-                    android.widget.Toast.makeText(this@LoginActivity, "Login Failed: ${t.message}", android.widget.Toast.LENGTH_SHORT).show()
-                    // Fallback for demo if network fails (e.g. mocky down)
-                    // Fallback for demo: Save dummy session
-                    val sharedPref = getSharedPreferences("UserSession", android.content.Context.MODE_PRIVATE)
-                    val editor = sharedPref.edit()
-                    editor.putString("KEY_NAME", "Demo User")
-                    editor.putString("KEY_EMAIL", email)
-                    editor.putBoolean("KEY_IS_LOGGED_IN", true)
-                    editor.apply()
-
-                     val fragment = UserLocFragment()
-                    supportFragmentManager.beginTransaction().apply {
-                        replace(R.id.UserLocFragment, fragment)
-                        addToBackStack(null)
-                        commit()
-                    }
+                override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+                    android.widget.Toast.makeText(applicationContext, t.message, android.widget.Toast.LENGTH_SHORT).show()
                 }
             })
         }

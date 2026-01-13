@@ -146,26 +146,42 @@
         android:paddingStart="16dp"
         android:paddingBottom="8dp"/>
 
-    <!-- Content Area (Empty State) -->
-    <LinearLayout
+    <!-- Content Area -->
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <ImageView
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:src="@drawable/img_empty_history" />
-            
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Haven't tried DeCasa?"
-            android:textSize="16sp"
-            android:textColor="#666666"
-            android:layout_marginTop="16dp"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvHistory"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp"
+            android:clipToPadding="false"
+            android:visibility="gone"
+            tools:listitem="@layout/item_history"/>
 
-    </LinearLayout>
+        <!-- Empty State -->
+        <LinearLayout
+            android:id="@+id/layoutEmpty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <ImageView
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:src="@drawable/img_empty_history" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Haven't tried DeCasa?"
+                android:textSize="16sp"
+                android:textColor="#666666"
+                android:layout_marginTop="16dp"/>
+        </LinearLayout>
+    </FrameLayout>
 
 </LinearLayout>

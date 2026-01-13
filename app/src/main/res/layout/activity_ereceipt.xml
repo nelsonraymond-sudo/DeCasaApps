@@ -52,7 +52,7 @@
             android:orientation="horizontal"
             android:layout_marginBottom="12dp">
             <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="Booking Date" android:textColor="#000000" android:textStyle="bold"/>
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="July 6, 2025" android:textColor="#000000"/>
+            <TextView android:id="@+id/tvReceiptDate" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="July 6, 2025" android:textColor="#000000"/>
         </LinearLayout>
         
         <LinearLayout
@@ -93,7 +93,7 @@
             android:orientation="horizontal"
             android:layout_marginBottom="12dp">
             <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="Amount" android:textColor="#000000" android:textStyle="bold"/>
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="$4000" android:textColor="#000000"/>
+            <TextView android:id="@+id/tvReceiptAmount" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="$4000" android:textColor="#000000"/>
         </LinearLayout>
         
         <LinearLayout
@@ -117,7 +117,7 @@
             android:orientation="horizontal"
             android:layout_marginBottom="12dp">
             <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="Total" android:textStyle="bold" android:textColor="#000000"/>
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="$4200" android:textStyle="bold" android:textColor="#000000"/>
+            <TextView android:id="@+id/tvReceiptTotal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="$4200" android:textStyle="bold" android:textColor="#000000"/>
         </LinearLayout>
     </LinearLayout>
     
@@ -158,7 +158,7 @@
             android:orientation="horizontal"
             android:layout_marginBottom="12dp">
             <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="Transaction Id" android:textColor="#000000" android:textStyle="bold"/>
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="722363290073" android:textColor="#000000"/>
+            <TextView android:id="@+id/tvReceiptTransactionId" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="722363290073" android:textColor="#000000"/>
         </LinearLayout>
     </LinearLayout>
 

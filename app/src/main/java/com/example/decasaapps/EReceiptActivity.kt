@@ -11,6 +11,28 @@ class EReceiptActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ereceipt)
 
+        // Retrieve Data
+        val propertyName = intent.getStringExtra("EXTRA_PROPERTY_NAME") ?: "Mille Housing"
+        val price = intent.getStringExtra("EXTRA_PRICE") ?: "$0"
+        val dateMillis = intent.getLongExtra("EXTRA_DATE", System.currentTimeMillis())
+        val txId = intent.getStringExtra("EXTRA_TRANSACTION_ID") ?: "000000000000"
+
+        // Setup Views
+        val tvDate = findViewById<android.widget.TextView>(R.id.tvReceiptDate)
+        val tvAmount = findViewById<android.widget.TextView>(R.id.tvReceiptAmount)
+        val tvTotal = findViewById<android.widget.TextView>(R.id.tvReceiptTotal)
+        val tvTxId = findViewById<android.widget.TextView>(R.id.tvReceiptTransactionId)
+        
+        // Format Date
+        val sdf = java.text.SimpleDateFormat("MMMM dd, yyyy", java.util.Locale.getDefault())
+        val dateString = sdf.format(java.util.Date(dateMillis))
+
+        // Set Data
+        tvDate.text = dateString
+        tvAmount.text = price
+        tvTotal.text = price // Assuming total is same as price for now, or calculate tax if needed
+        tvTxId.text = txId
+
         // Setup Back Button
         findViewById<android.view.View>(R.id.btnBack).setOnClickListener {
             navigateHome()

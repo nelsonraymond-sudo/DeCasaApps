@@ -101,7 +101,7 @@
                         android:autofillHints=""
                         android:background="@null"
                         android:hint="@string/search"
-                        android:inputType="TODO"
+                        android:inputType="text"
                         android:minHeight="48dp"
                         android:textColorHint="#999999"
                         android:textSize="14sp"

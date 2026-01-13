@@ -7,7 +7,7 @@ import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.decasaapps.model.Property
+import com.example.decasaapps.model.PropertyData
 
 class SearchInputActivity : AppCompatActivity() {
 
@@ -19,7 +19,7 @@ class SearchInputActivity : AppCompatActivity() {
         btnBack.setOnClickListener { finish() }
 
         val etSearch = findViewById<EditText>(R.id.etSearchQuery)
-        
+
         // Handle Action Search (Enter key on keyboard)
         etSearch.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
@@ -36,14 +36,18 @@ class SearchInputActivity : AppCompatActivity() {
         val rvTopSearch = findViewById<RecyclerView>(R.id.rvTopSearch)
         rvTopSearch.layoutManager = LinearLayoutManager(this)
 
+        // PERBAIKAN: Data dummy disesuaikan dengan Constructor PropertyData
         val dummyList = listOf(
-            Property("Mille Housing", "No 20 Okiki Street, Lagos", "400k", R.drawable.apartement1, "Apartment"),
-            Property("Mille Housing", "No 20 Okiki Street, Lagos", "400k", R.drawable.apartement1, "Apartment"),
-            Property("Mille Housing", "No 20 Okiki Street, Lagos", "400k", R.drawable.apartement1, "Apartment"),
-            Property("Mille Housing", "No 20 Okiki Street, Lagos", "400k", R.drawable.apartement1, "Apartment"),
-            Property("Mille Housing", "No 20 Okiki Street, Lagos", "400k", R.drawable.apartement1, "Apartment")
+            PropertyData("1", "Mille Housing", "Ago, Lagos", "400k", "Apartment", "https://dummyimage.com/600x400/000/fff", "4.5"),
+            PropertyData("2", "Green Villa", "Ubud, Bali", "1.2M", "Villa", "https://dummyimage.com/600x400/000/fff", "4.8"),
+            PropertyData("3", "Sunny House", "Jakarta", "850k", "House", "https://dummyimage.com/600x400/000/fff", "4.2")
         )
-        
-        rvTopSearch.adapter = TopSearchAdapter(dummyList)
+
+        // Pastikan Anda sudah punya 'TopSearchAdapter',
+        // jika belum, ganti baris ini dengan PropertyAdapter yang sudah ada.
+        // rvTopSearch.adapter = TopSearchAdapter(dummyList)
+
+        // SEMENTARA: Gunakan SearchResultAdapter jika TopSearchAdapter belum diperbaiki
+        rvTopSearch.adapter = SearchResultAdapter(dummyList)
     }
 }

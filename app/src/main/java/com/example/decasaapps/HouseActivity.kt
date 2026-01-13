@@ -1,75 +1,96 @@
 package com.example.decasaapps
 
 import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.decasaapps.model.Property
+import com.example.decasaapps.adapter.PropertyAdapter
+import com.example.decasaapps.client.Api // Pastikan ini sesuai nama Interface API kamu (misal ApiService)
+import com.example.decasaapps.client.RetrofitClient
+import com.example.decasaapps.model.PropertyData
+import com.example.decasaapps.model.property.PropertyResponse
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class HouseActivity : AppCompatActivity() {
 
     private lateinit var rvSearchResults: RecyclerView
-    private lateinit var adapter: SearchResultAdapter
-    private val resultList = ArrayList<Property>()
+    private lateinit var adapter: PropertyAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_search) // Reuse generic search layout
+        setContentView(R.layout.activity_search) // Pastikan ID RecyclerView ada di file layout ini
 
-        // Setup Views
+        // 1. Inisialisasi RecyclerView
         rvSearchResults = findViewById(R.id.rvSearchResults)
         rvSearchResults.layoutManager = LinearLayoutManager(this)
 
-        // Set Title specifically for House
-        findViewById<android.widget.TextView>(R.id.tvPageTitle)?.text = "House"
+        // 2. Setup Header
+        findViewById<TextView>(R.id.tvPageTitle)?.text = "House Category"
+        findViewById<View>(R.id.btnBack).setOnClickListener { finish() }
 
-        setupDummyData()
-
-        adapter = SearchResultAdapter(resultList)
-        rvSearchResults.adapter = adapter
-
-        // Back Button
-        findViewById<android.view.View>(R.id.btnBack).setOnClickListener {
-            finish()
-        }
-
-        setupFilterButtons()
+        // 3. Panggil Data
+        fetchDataFromApi()
     }
 
-    private fun setupFilterButtons() {
-        val btnRentals = findViewById<android.widget.TextView>(R.id.btnRentals)
-        val btnBuy = findViewById<android.widget.TextView>(R.id.btnBuy)
-        val btnSell = findViewById<android.widget.TextView>(R.id.btnSell)
+    private fun fetchDataFromApi() {
+        // Ganti 'Api::class.java' dengan 'ApiService::class.java' jika itu nama file kamu
+        val apiService = RetrofitClient.instance.create(Api::class.java)
 
-        // Set Selector Drawable
-        btnRentals.setBackgroundResource(R.drawable.button_selector)
-        btnBuy.setBackgroundResource(R.drawable.button_selector)
-        btnSell.setBackgroundResource(R.drawable.button_selector)
+        apiService.getProperti().enqueue(object : Callback<PropertyResponse> {
+            override fun onResponse(
+                call: Call<PropertyResponse>,
+                response: Response<PropertyResponse>
+            ) {
+                if (response.isSuccessful) {
+                    val apiDataList = response.body()?.data
 
-        // Add Click Listeners
-        val buttons = listOf(btnRentals, btnBuy, btnSell)
-        
-        fun selectButton(selected: android.widget.TextView) {
-            buttons.forEach { btn ->
-                btn.isSelected = (btn == selected)
-                btn.setTextColor(if (btn == selected) android.graphics.Color.WHITE else android.graphics.Color.BLACK)
+                    if (!apiDataList.isNullOrEmpty()) {
+
+                        // === PERBAIKAN LOGIC MAPPING DI SINI ===
+                        val adapterList = apiDataList.map { item ->
+
+                            // 1. Ambil foto pertama dari list, lalu gabungkan dengan Base URL
+                            val urlFotoMentah = item.listFoto.firstOrNull()?.urlFoto
+                            val fullUrl = if (urlFotoMentah != null) {
+                                "http://10.0.2.2:8000/storage/" + urlFotoMentah
+                            } else {
+                                ""
+                            }
+
+                            // 2. Masukkan ke PropertyData (Model UI)
+                            PropertyData(
+                                id = item.idProperti, // Pastikan tipe datanya sama (String/Int)
+                                namaProperti = item.namaProperti,
+                                alamat = item.alamat ?: "Alamat tidak tersedia",
+                                harga = "Rp ${item.harga}", // Tambah format Rp biar cantik
+                                deskripsi = item.deskripsi,
+                                fotoUrl = fullUrl, // Gunakan URL yang sudah dirakit di atas
+                                rating = "4.5"
+                            )
+                        }
+
+                        // Set Adapter
+                        adapter = PropertyAdapter(adapterList)
+                        rvSearchResults.adapter = adapter
+
+                    } else {
+                        Toast.makeText(this@HouseActivity, "Data Kosong", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Toast.makeText(this@HouseActivity, "Gagal: ${response.message()}", Toast.LENGTH_SHORT).show()
+                }
             }
-        }
 
-        // Default selection
-        selectButton(btnRentals)
-
-        btnRentals.setOnClickListener { selectButton(btnRentals) }
-        btnBuy.setOnClickListener { selectButton(btnBuy) }
-        btnSell.setOnClickListener { selectButton(btnSell) }
-    }
-
-    private fun setupDummyData() {
-        // Only House items
-        resultList.add(Property("Sunny House", "Jakarta, IND", "850k", R.drawable.apartement1, "House"))
-        resultList.add(Property("Cozy Cottage", "Bandung, IND", "600k", R.drawable.apartement1, "House"))
-        resultList.add(Property("Modern Housing", "New York, USA", "800k/year", R.drawable.apartement1, "House"))
-        resultList.add(Property("Family Home", "Surabaya, IND", "450k", R.drawable.apartement1, "House"))
-        resultList.add(Property("Grand Estate", "London, UK", "1.5M", R.drawable.apartement1, "House"))
+            override fun onFailure(call: Call<PropertyResponse>, t: Throwable) {
+                Log.e("API_ERROR", "Error: ${t.message}")
+                Toast.makeText(this@HouseActivity, "Gagal koneksi: ${t.localizedMessage}", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 }

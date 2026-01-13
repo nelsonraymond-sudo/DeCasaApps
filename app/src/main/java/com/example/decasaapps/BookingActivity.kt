@@ -17,10 +17,22 @@ class BookingActivity : AppCompatActivity() {
             finish()
         }
 
+
+        // Get Extras from DetailActivity
+        val name = intent.getStringExtra("EXTRA_NAME")
+        val location = intent.getStringExtra("EXTRA_LOCATION")
+        val imageUrl = intent.getStringExtra("EXTRA_IMAGE")
+        val price = intent.getStringExtra("EXTRA_PRICE")
+        val id = intent.getStringExtra("EXTRA_ID")
+
         // Setup Booking Button
         findViewById<android.view.View>(R.id.btnBooking).setOnClickListener {
-            // Toast.makeText(this, "Booking Successful!", Toast.LENGTH_SHORT).show()
             val intent = android.content.Intent(this, PaymentMethodActivity::class.java)
+            intent.putExtra("EXTRA_NAME", name)
+            intent.putExtra("EXTRA_LOCATION", location)
+            intent.putExtra("EXTRA_IMAGE", imageUrl)
+            intent.putExtra("EXTRA_PRICE", price)
+            intent.putExtra("EXTRA_ID", id)
             startActivity(intent)
         }
 

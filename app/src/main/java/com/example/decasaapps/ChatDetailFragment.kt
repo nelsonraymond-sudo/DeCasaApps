@@ -84,15 +84,17 @@ class ChatDetailFragment : Fragment() {
                     timestamp = System.currentTimeMillis()
                 )
                 
+                
+                // Add to Firestore (Offline-first approach)
                 db.collection("chats").add(newMessage)
-                    .addOnSuccessListener {
-                        etMessage.text.clear()
-                        rvMessages.scrollToPosition(messageList.size - 1)
-                        simulateAdminReply(db, currentUserId, text)
-                    }
                     .addOnFailureListener {
-                        Toast.makeText(context, "Failed to send", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Failed to send (Offline)", Toast.LENGTH_SHORT).show()
                     }
+
+                // Optimistic UI Update & Bot Trigger
+                etMessage.text.clear()
+                // We don't manually add to list here because the SnapshotListener will pick up local writes immediately
+                simulateAdminReply(db, currentUserId, text)
             }
         }
     }
@@ -101,16 +103,18 @@ class ChatDetailFragment : Fragment() {
         // Smart Chatbot Logic
         val lowerCaseMsg = userMessage.toLowerCase(java.util.Locale.getDefault())
         
-        var replyText = "Terima kasih telah menghubungi kami. Admin akan segera membalas."
+        var replyText = "Maaf, saya adalah asisten virtual. Untuk bantuan lebih lanjut, silakan hubungi Customer Service kami via WhatsApp."
         
-        if (lowerCaseMsg.contains("halo") || lowerCaseMsg.contains("hai") || lowerCaseMsg.contains("hallo") || lowerCaseMsg.contains("pagi") || lowerCaseMsg.contains("siang")) {
-            replyText = "Halo! Selamat datang di DeCasa. Ada yang bisa kami bantu?"
-        } else if (lowerCaseMsg.contains("harga") || lowerCaseMsg.contains("biaya") || lowerCaseMsg.contains("pricelist")) {
-            replyText = "Untuk informasi harga, silakan cek menu Paket Layanan di halaman utama kami."
-        } else if (lowerCaseMsg.contains("lokasi") || lowerCaseMsg.contains("alamat") || lowerCaseMsg.contains("dimana")) {
-            replyText = "Kami melayani area Jabodetabek. Kantor kami berlokasi di Jakarta Selatan."
-        } else if (lowerCaseMsg.contains("booking") || lowerCaseMsg.contains("pesan")) {
-            replyText = "Untuk pemesanan, silakan pilih layanan di menu Home dan ikuti langkah pemesanan."
+        if (lowerCaseMsg.contains("halo") || lowerCaseMsg.contains("hai") || lowerCaseMsg.contains("hi") || lowerCaseMsg.contains("pagi") || lowerCaseMsg.contains("siang") || lowerCaseMsg.contains("malam")) {
+            replyText = "Halo! Selamat datang di Layanan Pelanggan DeCasa. Ada yang bisa kami bantu hari ini?"
+        } else if (lowerCaseMsg.contains("harga") || lowerCaseMsg.contains("biaya") || lowerCaseMsg.contains("price") || lowerCaseMsg.contains("bayar")) {
+            replyText = "Untuk informasi harga properti, silakan cek halaman Detail dari properti yang Anda minati. Harga mulai dari $1,000/Tahun."
+        } else if (lowerCaseMsg.contains("lokasi") || lowerCaseMsg.contains("alamat") || lowerCaseMsg.contains("posisi") || lowerCaseMsg.contains("dimana")) {
+            replyText = "Properti kami tersebar di beberapa lokasi strategis seperti Jakarta, Bandung, dan Bali. Cek map di detail properti untuk lokasi tepatnya."
+        } else if (lowerCaseMsg.contains("booking") || lowerCaseMsg.contains("sewa") || lowerCaseMsg.contains("pesan") || lowerCaseMsg.contains("rent")) {
+            replyText = "Untuk melakukan pemesanan, silakan klik tombol 'Rentals' atau 'Payment' di halaman detail properti."
+        } else if (lowerCaseMsg.contains("makasih") || lowerCaseMsg.contains("terima kasih") || lowerCaseMsg.contains("thanks") || lowerCaseMsg.contains("thx")) {
+            replyText = "Sama-sama! Senang bisa membantu. Jangan ragu untuk menghubungi kami lagi jika ada pertanyaan lain."
         }
 
         // Delayed response from "Admin"
@@ -128,9 +132,12 @@ class ChatDetailFragment : Fragment() {
             )
             
             db.collection("chats").add(adminMessage)
+                .addOnSuccessListener {
+                     // Bot reply sent
+                }
                 .addOnFailureListener { e ->
                      if (context != null) {
-                        Toast.makeText(context, "Admin reply failed: ${e.message}", Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, "Bot failed to reply", Toast.LENGTH_SHORT).show()
                      }
                 }
         }, 1500) // 1.5 second delay for better UX

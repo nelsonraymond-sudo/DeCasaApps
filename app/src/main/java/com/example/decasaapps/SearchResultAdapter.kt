@@ -7,9 +7,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.decasaapps.model.Property
+import com.example.decasaapps.model.PropertyData
 
-class SearchResultAdapter(private val propertyList: List<Property>) :
+class SearchResultAdapter(private val propertyList: List<PropertyData>) :
     RecyclerView.Adapter<SearchResultAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -29,14 +29,19 @@ class SearchResultAdapter(private val propertyList: List<Property>) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val property = propertyList[position]
 
-        holder.tvTitle.text = property.title
-        holder.tvLocation.text = property.location
-        holder.tvPrice.text = property.price + "/year"
-        holder.tvType.text = property.type
+        // PERBAIKAN: Sesuaikan nama variabel dengan Model PropertyData
+        holder.tvTitle.text = property.namaProperti
+        holder.tvLocation.text = property.alamat
+        holder.tvPrice.text = property.harga
 
+        // Karena model tidak punya 'type', kita pakai deskripsi atau string kosong
+        holder.tvType.text = property.deskripsi ?: "Property"
+
+        // PERBAIKAN: Load image dari URL String
         Glide.with(holder.itemView.context)
-            .load(property.imageResId) // Assuming local resources for now or URL string
-            .placeholder(R.drawable.kamar_mewah)
+            .load(property.fotoUrl)
+            .placeholder(R.drawable.kamar_mewah) // Pastikan gambar ini ada di drawable
+            .error(R.drawable.ic_launcher_background) // Gambar cadangan jika error
             .into(holder.ivProperty)
     }
 
