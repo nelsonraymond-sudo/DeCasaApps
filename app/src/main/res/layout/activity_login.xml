@@ -32,11 +32,13 @@
             android:layout_below="@id/backButton"
             android:layout_marginTop="70dp"
             app:cardBackgroundColor="#E8E8E8"
+            android:background="@drawable/apartement2"
             app:cardCornerRadius="16dp"
             app:cardElevation="0dp">
 
             <ImageView
                 android:id="@+id/loginImage"
+                android:background="@drawable/apartement2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
@@ -119,7 +121,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="70dp"
             android:text="Forgot Password?"
-            android:textColor="#9C89D4"
+            android:textColor="@color/primary1"
             android:textSize="14sp" />
 
         <Button
@@ -133,7 +135,7 @@
             android:layout_marginStart="70dp"
             android:layout_marginTop="35dp"
             android:layout_marginEnd="70dp"
-            android:backgroundTint="#717C6D"
+            android:backgroundTint="@color/primary1"
             android:text="Login"
             android:textAllCaps="false"
             android:textColor="@color/white"

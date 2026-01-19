@@ -55,37 +55,47 @@ class SignUpActivity : AppCompatActivity() {
             )
             val apiService = com.example.decasaapps.client.RetrofitClient.instance.create(com.example.decasaapps.client.Api::class.java)
 
-            apiService.register(request).enqueue(object : retrofit2.Callback<com.example.decasaapps.model.auth.RegisterResponse> {
+            apiService.register(request).enqueue(object : retrofit2.Callback<com.google.gson.JsonElement> {
                 override fun onResponse(
-                    call: retrofit2.Call<com.example.decasaapps.model.auth.RegisterResponse>,
-                    response: retrofit2.Response<com.example.decasaapps.model.auth.RegisterResponse>
+                    call: retrofit2.Call<com.google.gson.JsonElement>,
+                    response: retrofit2.Response<com.google.gson.JsonElement>
                 ) {
-                    val regResponse = response.body()
-                    if (response.isSuccessful) {
-                        android.widget.Toast.makeText(this@SignUpActivity, "Registration Successful!", android.widget.Toast.LENGTH_SHORT).show()
-                        
-                        // Navigate to Login or Verification
-                        // Assuming VerificationFragment is the next step
-                        val fragment = VerificationFragment()
-                        supportFragmentManager.beginTransaction().apply {
-                            replace(R.id.VerificationFragment, fragment)
-                            addToBackStack(null)
-                            commit()
+                    if (response.isSuccessful && response.body() != null) {
+                        val rawJson = response.body().toString()
+                        android.util.Log.d("REGISTER_RAW_JSON", rawJson)
+
+                        try {
+                            val jsonObject = com.google.gson.JsonParser.parseString(rawJson).asJsonObject
+                            
+                            // Check for "success" boolean or just assume success if 200 OK
+                            // Typically Laravel returns details of the created user
+                            
+                            android.widget.Toast.makeText(this@SignUpActivity, "Registration Successful!", android.widget.Toast.LENGTH_SHORT).show()
+                            
+                            // Navigate directly to Login
+                            val intent = android.content.Intent(this@SignUpActivity, LoginActivity::class.java)
+                            intent.flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            startActivity(intent)
+                            finish()
+                        } catch (e: Exception) {
+                            android.widget.Toast.makeText(this@SignUpActivity, "Parse Error: ${e.message}", android.widget.Toast.LENGTH_SHORT).show()
                         }
                     } else {
                         val errorBody = response.errorBody()?.string()
                         val errorMessage = try {
                             val jsonObject = org.json.JSONObject(errorBody ?: "")
-                            jsonObject.optString("message", "Unknown Error")
+                            jsonObject.optString("message", "Registration Failed (Unknown)")
                         } catch (e: Exception) {
-                            "Error: ${response.code()}"
+                            "Error: ${response.code()} - $errorBody"
                         }
-                        android.widget.Toast.makeText(this@SignUpActivity, "Registration Failed: $errorMessage", android.widget.Toast.LENGTH_SHORT).show()
+                        android.widget.Toast.makeText(this@SignUpActivity, errorMessage, android.widget.Toast.LENGTH_LONG).show()
+                        android.util.Log.e("REGISTER_ERROR", "Body: $errorBody")
                     }
                 }
 
-                override fun onFailure(call: retrofit2.Call<com.example.decasaapps.model.auth.RegisterResponse>, t: Throwable) {
+                override fun onFailure(call: retrofit2.Call<com.google.gson.JsonElement>, t: Throwable) {
                     android.widget.Toast.makeText(this@SignUpActivity, "Registration Failed: ${t.message}", android.widget.Toast.LENGTH_SHORT).show()
+                    android.util.Log.e("REGISTER_FAIL", "Failure: ${t.message}", t)
                 }
             })
         }

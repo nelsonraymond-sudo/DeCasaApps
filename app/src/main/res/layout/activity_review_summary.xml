@@ -57,6 +57,7 @@
             android:gravity="center_vertical">
             
             <TextView
+                android:id="@+id/tvSummaryCategory"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Apartment"
@@ -115,7 +116,7 @@
             android:orientation="horizontal"
             android:layout_marginBottom="8dp">
             <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="Booking Date" android:textColor="#000000"/>
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="July 6, 2025" android:textColor="#666666" android:gravity="end"/>
+            <TextView android:id="@+id/tvSummaryDate" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="July 6, 2025" android:textColor="#666666" android:gravity="end"/>
         </LinearLayout>
         
         <LinearLayout
@@ -124,7 +125,7 @@
             android:orientation="horizontal"
             android:layout_marginBottom="8dp">
             <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="Check In" android:textColor="#000000"/>
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="July 10, 2025" android:textColor="#666666" android:gravity="end"/>
+            <TextView android:id="@+id/tvSummaryCheckIn" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="July 10, 2025" android:textColor="#666666" android:gravity="end"/>
         </LinearLayout>
         
         <LinearLayout
@@ -133,7 +134,7 @@
             android:orientation="horizontal"
             android:layout_marginBottom="8dp">
             <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="Duration" android:textColor="#000000"/>
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="4 days" android:textColor="#666666" android:gravity="end"/>
+            <TextView android:id="@+id/tvSummaryDuration" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="4 days" android:textColor="#666666" android:gravity="end"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -156,16 +157,17 @@
             android:orientation="horizontal"
             android:layout_marginBottom="8dp">
             <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="Amount" android:textColor="#000000"/>
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="$4000" android:textColor="#666666" android:gravity="end"/>
+            <TextView android:id="@+id/tvSummaryAmount" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="$4000" android:textColor="#666666" android:gravity="end"/>
         </LinearLayout>
         
         <LinearLayout
+            android:id="@+id/llTaxRow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginBottom="8dp">
             <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="Tax" android:textColor="#000000"/>
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="$200" android:textColor="#666666" android:gravity="end"/>
+            <TextView android:id="@+id/tvSummaryTax" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="$200" android:textColor="#666666" android:gravity="end"/>
         </LinearLayout>
         
         <View
@@ -180,7 +182,7 @@
             android:orientation="horizontal"
             android:layout_marginBottom="8dp">
             <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="Total" android:textStyle="bold" android:textColor="#000000"/>
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="$4200" android:textStyle="bold" android:textColor="#000000" android:gravity="end"/>
+            <TextView android:id="@+id/tvSummaryTotal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="$4200" android:textStyle="bold" android:textColor="#000000" android:gravity="end"/>
         </LinearLayout>
     </LinearLayout>
     
@@ -227,6 +229,6 @@
         android:textStyle="bold"
         android:textColor="#FFFFFF"
         android:background="@drawable/button_primary"
-        android:backgroundTint="#6D7865"/> <!-- Olive Green color -->
+        android:backgroundTint="@color/primary1"/> <!-- Olive Green color -->
 
 </LinearLayout>

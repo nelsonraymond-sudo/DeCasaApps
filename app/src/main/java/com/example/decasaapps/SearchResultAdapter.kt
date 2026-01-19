@@ -7,7 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.decasaapps.model.PropertyData
+import com.example.decasaapps.PropertyData
 
 class SearchResultAdapter(private val propertyList: List<PropertyData>) :
     RecyclerView.Adapter<SearchResultAdapter.ViewHolder>() {
@@ -30,19 +30,36 @@ class SearchResultAdapter(private val propertyList: List<PropertyData>) :
         val property = propertyList[position]
 
         // PERBAIKAN: Sesuaikan nama variabel dengan Model PropertyData
-        holder.tvTitle.text = property.namaProperti
-        holder.tvLocation.text = property.alamat
-        holder.tvPrice.text = property.harga
+        holder.tvTitle.text = property.name
+        holder.tvLocation.text = property.location
+        holder.tvPrice.text = property.price
 
         // Karena model tidak punya 'type', kita pakai deskripsi atau string kosong
-        holder.tvType.text = property.deskripsi ?: "Property"
+        holder.tvType.text = property.category
 
         // PERBAIKAN: Load image dari URL String
         Glide.with(holder.itemView.context)
-            .load(property.fotoUrl)
+            .load(property.imageUrl)
             .placeholder(R.drawable.kamar_mewah) // Pastikan gambar ini ada di drawable
             .error(R.drawable.ic_launcher_background) // Gambar cadangan jika error
             .into(holder.ivProperty)
+
+        // Add Click Listener
+        holder.itemView.setOnClickListener {
+            val intent = android.content.Intent(holder.itemView.context, com.example.decasaapps.DetailActivity::class.java)
+            intent.putExtra("EXTRA_NAME", property.name)
+            intent.putExtra("EXTRA_LOCATION", property.location)
+            intent.putExtra("EXTRA_IMAGE", property.imageUrl)
+            intent.putExtra("EXTRA_PRICE", property.price)
+            intent.putExtra("EXTRA_RATING", property.rating) // Assuming string or conversion needed if float
+            intent.putExtra("EXTRA_ID", property.serverId)
+            intent.putExtra("EXTRA_DESCRIPTION", property.description)
+            intent.putExtra("EXTRA_CATEGORY", property.category)
+            intent.putExtra("EXTRA_STATUS", property.status)
+            intent.putExtra("EXTRA_OWNER", property.owner)
+            intent.putExtra("EXTRA_FACILITIES", property.facilities)
+            holder.itemView.context.startActivity(intent)
+        }
     }
 
     override fun getItemCount(): Int = propertyList.size

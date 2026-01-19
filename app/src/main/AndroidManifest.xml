@@ -25,6 +25,15 @@
             android:name=".HouseActivity"
             android:exported="false" />
         <activity
+            android:name=".AppartmentActivity"
+            android:exported="false" />
+        <activity
+            android:name=".VillaActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CostsActivity"
+            android:exported="false" />
+        <activity
             android:name=".BookingActivity"
             android:exported="false" />
         <activity

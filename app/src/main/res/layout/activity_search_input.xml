@@ -108,9 +108,10 @@
             android:textColor="#000000"/>
 
         <TextView
+            android:id="@+id/tvFoundCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="3,324 found"
+            android:text="0 found"
             android:textColor="#FF5252"
             android:textSize="14sp"
             android:textStyle="bold"

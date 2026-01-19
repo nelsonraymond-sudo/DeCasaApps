@@ -2,7 +2,10 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.DeCasaApps" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorSecondary">@color/primary2</item>
+        <item name="colorTertiary">@color/primary1</item>
+        <item name="android:statusBarColor">@color/primary</item>
     </style>
 
     <style name="Theme.DeCasaApps" parent="Base.Theme.DeCasaApps" />

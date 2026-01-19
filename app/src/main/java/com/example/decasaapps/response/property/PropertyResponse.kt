@@ -24,29 +24,52 @@ data class PropertyItem(
     val alamat: String?,
 
     @SerializedName("harga")
-    val harga: String, // Bisa String atau Double, aman String dulu
+    val harga: String?, // Nullable String to be safe
+
+    @SerializedName("status")
+    val status: String?, 
+
+    @SerializedName("nama_pemilik")
+    val namaPemilik: String?,
+
+    @SerializedName("kategori")
+    val kategori: KategoriItem?,
 
     @SerializedName("foto")
-    val listFoto: List<FotoItem> = listOf(), // Default list kosong biar gak error kalau null
+    val listFoto: List<FotoItem> = listOf(),
 
     @SerializedName("fasilitas")
-    val listFasilitas: List<FasilitasItem> = listOf()
+    val listFasilitas: List<FasilitasWrapper> = listOf() 
 )
 
-// 3. Ini model untuk Foto (Nested JSON)
 data class FotoItem(
     @SerializedName("id_foto")
-    val idFoto: Int,
+    val idFoto: String?, // Changed to String
 
     @SerializedName("url_foto")
-    val urlFoto: String
+    val urlFoto: String?
 )
 
-// 4. Ini model untuk Fasilitas (Nested JSON)
-data class FasilitasItem(
+data class FasilitasWrapper(
     @SerializedName("id_detail")
-    val idDetail: Int,
+    val idDetail: String?, // Changed to String
 
+    @SerializedName("fasilitas")
+    val detail: FasilitasDetail?
+)
+
+data class FasilitasDetail(
     @SerializedName("id_fasilitas")
-    val idFasilitas: String
+    val idFasilitas: String?,
+
+    @SerializedName("nm_fasilitas")
+    val nmFasilitas: String?
+)
+
+data class KategoriItem(
+    @SerializedName("id_kategori")
+    val idKategori: String?, // Changed to String
+
+    @SerializedName("nm_kategori")
+    val nmKategori: String?
 )

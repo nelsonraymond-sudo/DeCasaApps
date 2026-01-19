@@ -26,12 +26,20 @@ class LogoutBottomSheetFragment : BottomSheetDialogFragment() {
         }
 
         view.findViewById<Button>(R.id.btnLogout).setOnClickListener {
-            Toast.makeText(context, "Logged out", Toast.LENGTH_SHORT).show()
+            // 1. Clear Session
+            val sharedPref = requireContext().getSharedPreferences("UserSession", android.content.Context.MODE_PRIVATE)
+            sharedPref.edit().clear().apply()
+
+            // 2. Clear ApiClient token
+            com.example.decasaapps.network.ApiClient.token = null
+
+            // 3. Navigate to Login
+            val intent = Intent(requireContext(), LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+
+            Toast.makeText(context, "Logged out successfully", Toast.LENGTH_SHORT).show()
             dismiss()
-            // Logic to clear session and go to Login Activity could be added here
-            // val intent = Intent(requireContext(), LoginActivity::class.java)
-            // intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            // startActivity(intent)
         }
     }
 }

@@ -33,17 +33,7 @@
             android:textStyle="bold" />
     </RelativeLayout>
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <!-- Cash Section -->
+    <!-- Cash Section -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -72,7 +62,7 @@
                         android:layout_width="32dp"
                         android:layout_height="20dp"
                         android:src="@android:drawable/ic_menu_rotate" 
-                        app:tint="#4CAF50"/> <!-- Placeholder for Cash Icon -->
+                        app:tint="#4CAF50"/> 
                     
                     <TextView
                         android:layout_width="0dp"
@@ -88,21 +78,62 @@
                         android:layout_height="wrap_content"
                         android:clickable="false"
                         android:checked="true"
-                        android:buttonTint="#556B2F"/> <!-- Olive Drab theme -->
+                        android:buttonTint="#556B2F"/>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Credit & Debit Card Section -->
+            <!-- Bank Transfer Section -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Credit &amp; Debit Card"
+                android:text="Bank Transfer"
                 android:textStyle="bold"
                 android:textColor="#000000"
                 android:layout_marginBottom="8dp"/>
 
+            <!-- BCA -->
             <androidx.cardview.widget.CardView
-                android:id="@+id/cardCreditCard"
+                android:id="@+id/cardBca"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="#FFFFFF"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="20dp"
+                        android:src="@android:drawable/ic_menu_view"
+                        app:tint="#0000FF"/> <!-- Blue for BCA -->
+                    
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="BCA"
+                        android:textColor="#000000"
+                        android:layout_marginStart="16dp"/>
+
+                    <RadioButton
+                        android:id="@+id/rbBca"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="false"
+                        android:buttonTint="#556B2F"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Mandiri -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardMandiri"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="12dp"
@@ -120,122 +151,25 @@
                     <ImageView
                         android:layout_width="32dp"
                         android:layout_height="20dp"
-                        android:src="@android:drawable/ic_menu_gallery"
-                        app:tint="#FFC107"/> <!-- Placeholder -->
+                        android:src="@android:drawable/ic_menu_view"
+                        app:tint="#FFC107"/> <!-- Gold for Mandiri -->
                     
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Add a new card"
-                        android:textColor="#666666"
+                        android:text="Mandiri"
+                        android:textColor="#000000"
                         android:layout_marginStart="16dp"/>
 
                     <RadioButton
-                        android:id="@+id/rbCreditCard"
+                        android:id="@+id/rbMandiri"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:clickable="false"
                         android:buttonTint="#556B2F"/>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
-
-            <!-- More Payment Options -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="More Payment Options"
-                android:textStyle="bold"
-                android:textColor="#000000"
-                android:layout_marginBottom="8dp"/>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp"
-                app:cardBackgroundColor="#FFFFFF"
-                android:layout_marginBottom="24dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <!-- Dana -->
-                    <LinearLayout
-                        android:id="@+id/cardDana"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:padding="16dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:background="?attr/selectableItemBackground">
-
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@android:drawable/btn_star_big_on"
-                            app:tint="#2196F3"/> <!-- Blue for Dana -->
-                        
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Dana"
-                            android:textColor="#000000"
-                            android:layout_marginStart="16dp"/>
-
-                        <RadioButton
-                            android:id="@+id/rbDana"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:clickable="false"
-                            android:buttonTint="#556B2F"/>
-                    </LinearLayout>
-
-                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE"/>
-
-                    <!-- QRIS -->
-                    <LinearLayout
-                        android:id="@+id/cardQris"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:padding="16dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:background="?attr/selectableItemBackground">
-
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@android:drawable/ic_menu_camera"
-                            app:tint="#000000"/> <!-- Placeholder for QRIS -->
-                        
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="QRIS"
-                            android:textColor="#000000"
-                            android:layout_marginStart="16dp"/>
-
-                        <RadioButton
-                            android:id="@+id/rbQris"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:clickable="false"
-                            android:buttonTint="#556B2F"/>
-                    </LinearLayout>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-        </LinearLayout>
-    </ScrollView>
 
     <Button
         android:id="@+id/btnContinue"

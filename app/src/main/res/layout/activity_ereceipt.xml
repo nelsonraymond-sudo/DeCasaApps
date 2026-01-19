@@ -61,7 +61,7 @@
             android:orientation="horizontal"
             android:layout_marginBottom="12dp">
             <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="Check In" android:textColor="#000000" android:textStyle="bold"/>
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="July 10, 2025" android:textColor="#000000"/>
+            <TextView android:id="@+id/tvReceiptCheckIn" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="July 10, 2025" android:textColor="#000000"/>
         </LinearLayout>
         
         <LinearLayout
@@ -70,7 +70,7 @@
             android:orientation="horizontal"
             android:layout_marginBottom="12dp">
             <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="Duration" android:textColor="#000000" android:textStyle="bold"/>
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="4 days" android:textColor="#000000"/>
+            <TextView android:id="@+id/tvReceiptDuration" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="4 days" android:textColor="#000000"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -102,7 +102,7 @@
             android:orientation="horizontal"
             android:layout_marginBottom="12dp">
             <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="Tax" android:textColor="#000000" android:textStyle="bold"/>
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="$200" android:textColor="#000000"/>
+            <TextView android:id="@+id/tvReceiptTax" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="$200" android:textColor="#000000"/>
         </LinearLayout>
         
         <View
@@ -140,7 +140,7 @@
             android:orientation="horizontal"
             android:layout_marginBottom="12dp">
             <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="Name" android:textColor="#000000" android:textStyle="bold"/>
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Sulton Ayomide" android:textColor="#000000"/>
+            <TextView android:id="@+id/tvReceiptName" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Sulton Ayomide" android:textColor="#000000"/>
         </LinearLayout>
         
         <LinearLayout
@@ -149,7 +149,7 @@
             android:orientation="horizontal"
             android:layout_marginBottom="12dp">
             <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="Phone Number" android:textColor="#000000" android:textStyle="bold"/>
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="+234 908 273 6743" android:textColor="#000000"/>
+            <TextView android:id="@+id/tvReceiptPhone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="+234 908 273 6743" android:textColor="#000000"/>
         </LinearLayout>
 
         <LinearLayout

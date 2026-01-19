@@ -11,7 +11,7 @@ data class LoginResponse(
     val message: String,
     @SerializedName("access_token")
     val token: String?,
-    @SerializedName("data")
+    @SerializedName(value = "data", alternate = ["user"])
     val user: User?
 )
 
@@ -30,12 +30,12 @@ data class RegisterResponse(
 )
 
 data class User(
-    @SerializedName("id_user")
-    val id: String,
-    @SerializedName("nm_user")
-    val name: String,
-    val email: String,
-    @SerializedName("role")
-    val level: String,
+    @SerializedName(value = "id_user", alternate = ["id", "user_id", "id_customer", "customer_id"])
+    val id: String?,
+    @SerializedName(value = "nm_user", alternate = ["name", "nm_customer", "customer_name"])
+    val name: String?,
+    val email: String?,
+    @SerializedName(value = "role", alternate = ["level"])
+    val level: String?,
     val no_hp: String?
 )

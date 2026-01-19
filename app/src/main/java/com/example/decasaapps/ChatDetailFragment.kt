@@ -13,6 +13,7 @@ import android.widget.Toast
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.firestore.Query
+import java.util.Locale
 
 class ChatDetailFragment : Fragment() {
 
@@ -101,16 +102,16 @@ class ChatDetailFragment : Fragment() {
 
     private fun simulateAdminReply(db: com.google.firebase.firestore.FirebaseFirestore, conversationId: String, userMessage: String) {
         // Smart Chatbot Logic
-        val lowerCaseMsg = userMessage.toLowerCase(java.util.Locale.getDefault())
+        val lowerCaseMsg = userMessage.lowercase(Locale.getDefault())
         
         var replyText = "Maaf, saya adalah asisten virtual. Untuk bantuan lebih lanjut, silakan hubungi Customer Service kami via WhatsApp."
         
         if (lowerCaseMsg.contains("halo") || lowerCaseMsg.contains("hai") || lowerCaseMsg.contains("hi") || lowerCaseMsg.contains("pagi") || lowerCaseMsg.contains("siang") || lowerCaseMsg.contains("malam")) {
             replyText = "Halo! Selamat datang di Layanan Pelanggan DeCasa. Ada yang bisa kami bantu hari ini?"
         } else if (lowerCaseMsg.contains("harga") || lowerCaseMsg.contains("biaya") || lowerCaseMsg.contains("price") || lowerCaseMsg.contains("bayar")) {
-            replyText = "Untuk informasi harga properti, silakan cek halaman Detail dari properti yang Anda minati. Harga mulai dari $1,000/Tahun."
+            replyText = "Untuk informasi harga properti, silakan cek halaman Detail dari properti yang Anda minati. Harga mulai dari Rp.60.000/Day"
         } else if (lowerCaseMsg.contains("lokasi") || lowerCaseMsg.contains("alamat") || lowerCaseMsg.contains("posisi") || lowerCaseMsg.contains("dimana")) {
-            replyText = "Properti kami tersebar di beberapa lokasi strategis seperti Jakarta, Bandung, dan Bali. Cek map di detail properti untuk lokasi tepatnya."
+            replyText = "Properti kami tersebar di beberapa lokasi Yogyakarta. Cek map di detail properti untuk lokasi tepatnya."
         } else if (lowerCaseMsg.contains("booking") || lowerCaseMsg.contains("sewa") || lowerCaseMsg.contains("pesan") || lowerCaseMsg.contains("rent")) {
             replyText = "Untuk melakukan pemesanan, silakan klik tombol 'Rentals' atau 'Payment' di halaman detail properti."
         } else if (lowerCaseMsg.contains("makasih") || lowerCaseMsg.contains("terima kasih") || lowerCaseMsg.contains("thanks") || lowerCaseMsg.contains("thx")) {

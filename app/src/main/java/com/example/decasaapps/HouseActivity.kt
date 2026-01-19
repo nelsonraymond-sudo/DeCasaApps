@@ -9,29 +9,34 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.decasaapps.adapter.PropertyAdapter
-import com.example.decasaapps.client.Api // Pastikan ini sesuai nama Interface API kamu (misal ApiService)
+import com.example.decasaapps.client.Api
 import com.example.decasaapps.client.RetrofitClient
-import com.example.decasaapps.model.PropertyData
 import com.example.decasaapps.model.property.PropertyResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+private val HOUSE_VARIANTS = listOf("House", "Rumah", "Building")
+
 class HouseActivity : AppCompatActivity() {
 
     private lateinit var rvSearchResults: RecyclerView
     private lateinit var adapter: PropertyAdapter
+    private var targetCategory: String = "House" // Default category
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_search) // Pastikan ID RecyclerView ada di file layout ini
+        setContentView(R.layout.activity_search)
+
+        // 0. Get Category from Intent
+        targetCategory = intent.getStringExtra("CATEGORY") ?: "House"
 
         // 1. Inisialisasi RecyclerView
         rvSearchResults = findViewById(R.id.rvSearchResults)
         rvSearchResults.layoutManager = LinearLayoutManager(this)
 
         // 2. Setup Header
-        findViewById<TextView>(R.id.tvPageTitle)?.text = "House Category"
+        findViewById<android.widget.EditText>(R.id.etSearchQuery).setText(targetCategory)
         findViewById<View>(R.id.btnBack).setOnClickListener { finish() }
 
         // 3. Panggil Data
@@ -39,7 +44,6 @@ class HouseActivity : AppCompatActivity() {
     }
 
     private fun fetchDataFromApi() {
-        // Ganti 'Api::class.java' dengan 'ApiService::class.java' jika itu nama file kamu
         val apiService = RetrofitClient.instance.create(Api::class.java)
 
         apiService.getProperti().enqueue(object : Callback<PropertyResponse> {
@@ -52,32 +56,47 @@ class HouseActivity : AppCompatActivity() {
 
                     if (!apiDataList.isNullOrEmpty()) {
 
-                        // === PERBAIKAN LOGIC MAPPING DI SINI ===
-                        val adapterList = apiDataList.map { item ->
-
-                            // 1. Ambil foto pertama dari list, lalu gabungkan dengan Base URL
-                            val urlFotoMentah = item.listFoto.firstOrNull()?.urlFoto
-                            val fullUrl = if (urlFotoMentah != null) {
-                                "http://10.0.2.2:8000/storage/" + urlFotoMentah
+                        // Filter by Category
+                        val filteredList = apiDataList.filter { item ->
+                            val currentCat = item.kategori?.nmKategori?.trim()
+                            if (targetCategory.equals("House", ignoreCase = true)) {
+                                HOUSE_VARIANTS.any { it.equals(currentCat, ignoreCase = true) }
                             } else {
-                                ""
+                                currentCat?.contains(targetCategory, ignoreCase = true) == true
                             }
-
-                            // 2. Masukkan ke PropertyData (Model UI)
-                            PropertyData(
-                                id = item.idProperti, // Pastikan tipe datanya sama (String/Int)
-                                namaProperti = item.namaProperti,
-                                alamat = item.alamat ?: "Alamat tidak tersedia",
-                                harga = "Rp ${item.harga}", // Tambah format Rp biar cantik
-                                deskripsi = item.deskripsi,
-                                fotoUrl = fullUrl, // Gunakan URL yang sudah dirakit di atas
-                                rating = "4.5"
-                            )
                         }
 
-                        // Set Adapter
-                        adapter = PropertyAdapter(adapterList)
-                        rvSearchResults.adapter = adapter
+                        if (filteredList.isNotEmpty()) {
+                            val adapterList = filteredList.map { item ->
+                                val urlFotoMentah = item.listFoto.firstOrNull()?.urlFoto
+                                val fullUrl = if (urlFotoMentah != null) {
+                                    "http://10.0.2.2:8000/storage/" + urlFotoMentah
+                                } else {
+                                    ""
+                                }
+
+                                PropertyData(
+                                    serverId = item.idProperti,
+                                    name = item.namaProperti,
+                                    location = item.alamat ?: "Alamat tidak tersedia",
+                                    price = item.harga ?: "0",
+                                    imageUrl = fullUrl,
+                                    rating = "4.5",
+                                    description = item.deskripsi ?: "No Description",
+                                    category = item.kategori?.nmKategori ?: "House",
+                                    status = item.status ?: "Available",
+                                    owner = item.namaPemilik ?: "DeCasa Admin",
+                                    facilities = item.listFasilitas.mapNotNull { it.detail?.nmFasilitas }.joinToString(", ")
+                                )
+                            }
+
+                            adapter = PropertyAdapter(adapterList) { _, _ -> }
+                            rvSearchResults.adapter = adapter
+                        } else {
+                            // Show empty state if no items match category
+                            Toast.makeText(this@HouseActivity, "No $targetCategory found", Toast.LENGTH_SHORT).show()
+                            rvSearchResults.adapter = PropertyAdapter(emptyList()) { _, _ -> }
+                        }
 
                     } else {
                         Toast.makeText(this@HouseActivity, "Data Kosong", Toast.LENGTH_SHORT).show()

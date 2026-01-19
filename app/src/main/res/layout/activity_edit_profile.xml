@@ -42,6 +42,7 @@
         android:layout_marginBottom="32dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/ivProfile"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:src="@drawable/potoo"
@@ -49,6 +50,7 @@
             app:civ_border_color="#CCCCCC" />
 
         <ImageView
+            android:id="@+id/btnChangePhoto"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_alignEnd="@+id/ivProfile"
@@ -83,13 +85,14 @@
                 android:layout_marginBottom="8dp"/>
 
             <EditText
+                android:id="@+id/etName"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:background="@drawable/bg_input_gray"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
-                android:text="Yoana Dovina Fallen"
-                android:textColor="#666666"
+                android:hint="Full Name"
+                android:textColor="#000000"
                 android:textSize="16sp"
                 android:layout_marginBottom="16dp"
                 android:importantForAutofill="no"
@@ -105,16 +108,18 @@
                 android:layout_marginBottom="8dp"/>
 
             <EditText
+                android:id="@+id/etDob"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:background="@drawable/bg_input_gray"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
-                android:text="24/06/2006"
-                android:textColor="#666666"
+                android:hint="DD/MM/YYYY"
+                android:textColor="#000000"
                 android:textSize="16sp"
                 android:layout_marginBottom="16dp"
                 android:importantForAutofill="no"
+                android:focusable="false"
                 android:inputType="date"/>
 
             <!-- Phone Number -->
@@ -127,13 +132,14 @@
                 android:layout_marginBottom="8dp"/>
 
             <EditText
+                android:id="@+id/etPhone"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:background="@drawable/bg_input_gray"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
-                android:text="081898769853"
-                android:textColor="#666666"
+                android:hint="08xxxxxxxx"
+                android:textColor="#000000"
                 android:textSize="16sp"
                 android:layout_marginBottom="16dp"
                 android:importantForAutofill="no"
@@ -149,13 +155,14 @@
                 android:layout_marginBottom="8dp"/>
 
             <EditText
+                android:id="@+id/etGender"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:background="@drawable/bg_input_gray"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
-                android:text="Female"
-                android:textColor="#666666"
+                android:hint="Male/Female"
+                android:textColor="#000000"
                 android:textSize="16sp"
                 android:layout_marginBottom="32dp"
                 android:importantForAutofill="no"

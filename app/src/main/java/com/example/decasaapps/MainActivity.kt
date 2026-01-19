@@ -22,7 +22,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.decasaapps.adapter.PropertyAdapter // Import Adapter
 import com.example.decasaapps.client.RetrofitClient // Sesuaikan Client
-import com.example.decasaapps.model.PropertyData // Import Model
+// import com.example.decasaapps.model.PropertyData // Removed invalid import
+import com.example.decasaapps.database.AppDatabase // Import Database
 import com.example.decasaapps.network.ApiService // Sesuaikan Interface
 import com.example.decasaapps.model.property.PropertyResponse
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -48,6 +49,12 @@ class MainActivity : AppCompatActivity() {
         setupNotificationClick()
         setupSearchClick()
         setupBottomNavigation()
+        
+        // Initialize ApiClient token from Session
+        val sharedPref = getSharedPreferences("UserSession", android.content.Context.MODE_PRIVATE)
+        val token = sharedPref.getString("KEY_TOKEN", null)
+        com.example.decasaapps.network.ApiClient.token = token
+
         fetchDataFromApi()
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -81,23 +88,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupCategoryClicks() {
-        val categoryIds = mapOf(
-            R.id.btnCategoryApartment to "Apartment",
-            R.id.btnCategoryVilla to "Villa",
-            R.id.btnCategoryCosts to "Costs"
-        )
-
         findViewById<LinearLayout>(R.id.btnCategoryHouse).setOnClickListener {
             val intent = Intent(this, HouseActivity::class.java)
             startActivity(intent)
         }
 
-        for ((id, query) in categoryIds) {
-            findViewById<LinearLayout>(id).setOnClickListener {
-                val intent = Intent(this, SearchActivity::class.java)
-                intent.putExtra("QUERY", query)
-                startActivity(intent)
-            }
+        findViewById<LinearLayout>(R.id.btnCategoryApartment).setOnClickListener {
+            startActivity(Intent(this, AppartmentActivity::class.java))
+        }
+
+        findViewById<LinearLayout>(R.id.btnCategoryVilla).setOnClickListener {
+            startActivity(Intent(this, VillaActivity::class.java))
+        }
+
+        findViewById<LinearLayout>(R.id.btnCategoryCosts).setOnClickListener {
+            startActivity(Intent(this, CostsActivity::class.java))
         }
     }
 
@@ -177,68 +182,81 @@ class MainActivity : AppCompatActivity() {
 
                             // 2. Masukkan ke wadah PropertyData
                             PropertyData(
-                                id = itemServer.idProperti,
-                                namaProperti = itemServer.namaProperti,
-                                alamat = itemServer.alamat ?: "Alamat tidak tersedia",
-                                harga = "Rp ${itemServer.harga}", // Format harga manual
-                                deskripsi = itemServer.deskripsi ?: "",
-                                rating = "4.5", // Default rating (karena belum ada di DB)
-                                fotoUrl = fullFotoUrl
+                                serverId = itemServer.idProperti, // idProperti is String (non-null in response but strict check might fail if I changed it to nullable? PropertyResponse had idProperti as String (non-nullable) in my previous ViewFile? No, I changed EVERYTHING to String? No, I checked the diff, I only changed things that were problematic. 
+                                // Looking at previous diff: 
+                                // idProperti was NOT changed to String?, it remained String.
+                                // harga WAS changed to String?.
+                                // So only harga needs fixing here based on user error.
+                                // But checking the error logs might be safer.
+                                // User error says: "actual type is 'kotlin.String?', but 'kotlin.String' was expected" for 'harga'.
+                                name = itemServer.namaProperti,
+                                location = itemServer.alamat ?: "Alamat tidak tersedia",
+                                price = itemServer.harga ?: "0", // FIX: Handle null
+                                rating = "4.5",
+                                imageUrl = fullFotoUrl,
+                                description = itemServer.deskripsi ?: "No Description",
+                                category = itemServer.kategori?.nmKategori ?: "No Category",
+                                status = itemServer.status ?: "Available",
+                                owner = itemServer.namaPemilik ?: "DeCasa Admin",
+                                facilities = itemServer.listFasilitas.mapNotNull { it.detail?.nmFasilitas }.joinToString(", ")
                             )
                         }
 
-                        // --- SET ADAPTER ---
-                        rvPopular.adapter = PropertyAdapter(dataSiapTampil)
+
+        // --- SET ADAPTER ---
+                        rvPopular.adapter = PropertyAdapter(dataSiapTampil, false) { property, isFavorite ->
+                            lifecycleScope.launch {
+                                val dao = AppDatabase.getDatabase(this@MainActivity).propertyDao()
+                                if (isFavorite) {
+                                    dao.insertProperty(property)
+                                    Toast.makeText(this@MainActivity, "Added to Favorites", Toast.LENGTH_SHORT).show()
+                                } else {
+                                    dao.deleteByServerId(property.serverId)
+                                    Toast.makeText(this@MainActivity, "Removed from Favorites", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
 
                         // Untuk recommended, kita acak datanya
-                        rvRecommended.adapter = PropertyAdapter(dataSiapTampil.shuffled())
+                        rvRecommended.adapter = PropertyAdapter(dataSiapTampil.shuffled(), false) { property, isFavorite ->
+                             lifecycleScope.launch {
+                                val dao = AppDatabase.getDatabase(this@MainActivity).propertyDao()
+                                if (isFavorite) {
+                                    dao.insertProperty(property)
+                                    Toast.makeText(this@MainActivity, "Added to Favorites", Toast.LENGTH_SHORT).show()
+                                } else {
+                                    dao.deleteByServerId(property.serverId)
+                                    Toast.makeText(this@MainActivity, "Removed from Favorites", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
 
                     } else {
                         Toast.makeText(this@MainActivity, "Data Kosong", Toast.LENGTH_SHORT).show()
-                        loadDummyData() // Fallback ke dummy jika server kosong
+                        // loadDummyData() // Fallback disabled to debug API
                     }
                 } else {
-                    Log.e("API_ERROR", "Response gagal: ${response.message()}")
-                    Toast.makeText(this@MainActivity, "Gagal memuat data", Toast.LENGTH_SHORT).show()
-                    loadDummyData()
+                    val errorBody = response.errorBody()?.string() ?: "Unknown Error"
+                    Log.e("API_ERROR", "Response gagal: $errorBody")
+                    
+                    // Show full error in a Dialog so user can see what's wrong with Laravel
+                    android.app.AlertDialog.Builder(this@MainActivity)
+                        .setTitle("Server Error ${response.code()}")
+                        .setMessage(errorBody.take(500)) // Take first 500 chars to avoid huge dialog
+                        .setPositiveButton("OK", null)
+                        .show()
                 }
             }
 
             override fun onFailure(call: Call<PropertyResponse>, t: Throwable) {
                 Log.e("API_ERROR", "Koneksi Error: ${t.message}")
-                Toast.makeText(this@MainActivity, "Koneksi Error. Cek Server.", Toast.LENGTH_SHORT).show()
-                loadDummyData()
+                Toast.makeText(this@MainActivity, "Error: ${t.message}", Toast.LENGTH_LONG).show()
+                // loadDummyData()
             }
         })
     }
 
-
-
-    // --- FUNGSI INI TADI RUSAK, SEKARANG SUDAH DIPERBAIKI ---
     private fun loadDummyData() {
-        val dummyList = listOf(
-            PropertyData(
-                id = "1",
-                namaProperti = "Luxury Villa Bali",
-                alamat = "Bali, Indonesia",
-                rating = "4.8",
-                harga = "Rp 1M",
-                deskripsi = "Villa Mewah",
-                fotoUrl = "https://images.unsplash.com/photo-1580587771525-78b9dba3b91d?w=500"
-            ),
-            PropertyData(
-                id = "2",
-                namaProperti = "Modern Apartment",
-                alamat = "Jakarta, Indonesia",
-                rating = "4.5",
-                harga = "Rp 500jt",
-                deskripsi = "Apartemen Pusat Kota",
-                fotoUrl = "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=500"
-            )
-        )
-
-        rvPopular.adapter = PropertyAdapter(dummyList)
-        rvRecommended.adapter = PropertyAdapter(dummyList.shuffled())
-        Toast.makeText(this@MainActivity, "Using Mock Data", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "Dummy Data Disabled", Toast.LENGTH_SHORT).show()
     }
 }

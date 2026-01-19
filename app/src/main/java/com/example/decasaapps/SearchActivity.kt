@@ -1,12 +1,21 @@
 package com.example.decasaapps
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.decasaapps.model.PropertyData
+import com.example.decasaapps.adapter.PropertyAdapter
+import com.example.decasaapps.client.RetrofitClient
+import com.example.decasaapps.model.property.PropertyResponse
+import com.example.decasaapps.network.ApiService
+import com.example.decasaapps.PropertyData
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class SearchActivity : AppCompatActivity() {
 
@@ -23,8 +32,6 @@ class SearchActivity : AppCompatActivity() {
         rvSearchResults = findViewById(R.id.rvSearchResults)
         rvSearchResults.layoutManager = LinearLayoutManager(this)
 
-        setupDummyData()
-
         adapter = SearchResultAdapter(resultList)
         rvSearchResults.adapter = adapter
 
@@ -33,13 +40,28 @@ class SearchActivity : AppCompatActivity() {
             finish()
         }
 
-        // Set Title based on intent
-        val query = intent.getStringExtra("QUERY") ?: "Search"
-        if (query.isNotEmpty()) {
-            findViewById<TextView>(R.id.tvPageTitle)?.text = query
-        }
-
+        // Set Search Query
+        val query = intent.getStringExtra("QUERY") ?: ""
+        val etSearchQuery = findViewById<android.widget.EditText>(R.id.etSearchQuery)
+        
         setupFilterButtons()
+
+        if (query.isNotEmpty()) {
+            etSearchQuery.setText(query)
+            performSearch(query)
+        } 
+        
+        // Handle New Search from inside Result Page
+        etSearchQuery.setOnEditorActionListener { v, actionId, event ->
+            if (actionId == android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH) {
+                val newQuery = v.text.toString()
+                if (newQuery.isNotEmpty()) {
+                    performSearch(newQuery)
+                }
+                return@setOnEditorActionListener true
+            }
+            false
+        }
     }
 
     private fun setupFilterButtons() {
@@ -68,31 +90,56 @@ class SearchActivity : AppCompatActivity() {
         btnSell.setOnClickListener { selectButton(btnSell) }
     }
 
-    private fun setupDummyData() {
-        // PERBAIKAN: Constructor harus sesuai Model (id, nama, alamat, harga, deskripsi, fotoUrl, rating)
-        // Foto URL harus String HTTP, jangan R.drawable (Int)
-        val allProperties = listOf(
-            PropertyData("1", "Mille Housing", "Ago, Lagos", "400k", "Apartment", "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2", "4.5"),
-            PropertyData("2", "Green Villa", "Ubud, Bali", "1.2M", "Villa", "https://images.unsplash.com/photo-1512917774080-9991f1c4c750", "4.8"),
-            PropertyData("3", "Sunny House", "Jakarta, IND", "850k", "House", "https://images.unsplash.com/photo-1580587771525-78b9dba3b91d", "4.3"),
-            PropertyData("4", "Mille Housing II", "Ago, Lagos", "400k", "Apartment", "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2", "4.4"),
-            PropertyData("5", "Ocean View", "Kuta, Bali", "2.5M", "Villa", "https://images.unsplash.com/photo-1512917774080-9991f1c4c750", "4.9"),
-            PropertyData("6", "Cozy Cottage", "Bandung, IND", "600k", "House", "https://images.unsplash.com/photo-1580587771525-78b9dba3b91d", "4.2"),
-            PropertyData("7", "Luxury House", "New York, USA", "800k", "House", "https://images.unsplash.com/photo-1564013799919-ab600027ffc6", "5.0")
-        )
+    private fun performSearch(query: String) {
+        val apiService = RetrofitClient.instance.create(ApiService::class.java)
+        
+        // Use the searchProperties endpoint we added
+        apiService.searchProperties(query).enqueue(object : Callback<PropertyResponse> {
+            override fun onResponse(call: Call<PropertyResponse>, response: Response<PropertyResponse>) {
+                if (response.isSuccessful) {
+                    val propertyResponse = response.body()
+                    val dataServer = propertyResponse?.data
 
-        val query = intent.getStringExtra("QUERY") ?: ""
+                    resultList.clear()
+                    if (!dataServer.isNullOrEmpty()) {
+                        val mappedData = dataServer.map { item ->
+                            val fotoUrlPath = item.listFoto.firstOrNull()?.urlFoto
+                            val fullFotoUrl = if (fotoUrlPath != null) {
+                                "http://10.0.2.2:8000/storage/" + fotoUrlPath
+                            } else {
+                                "" 
+                            }
 
-        if (query.isNotEmpty() && query != "Search") {
-            resultList.clear()
-            // PERBAIKAN: Filter berdasarkan namaProperti atau Alamat (karena type/title tidak ada)
-            resultList.addAll(allProperties.filter {
-                it.namaProperti.contains(query, ignoreCase = true) ||
-                        it.alamat.contains(query, ignoreCase = true) ||
-                        (it.deskripsi?.contains(query, ignoreCase = true) == true)
-            })
-        } else {
-            resultList.addAll(allProperties)
-        }
+                            PropertyData(
+                                serverId = item.idProperti,
+                                name = item.namaProperti,
+                                location = item.alamat ?: "Alamat tidak tersedia",
+                                price = item.harga ?: "0", 
+                                rating = "4.5",
+                                imageUrl = fullFotoUrl,
+                                description = item.deskripsi ?: "No Description",
+                                category = item.kategori?.nmKategori ?: "House",
+                                status = item.status ?: "Available",
+                                owner = item.namaPemilik ?: "DeCasa Admin",
+                                facilities = item.listFasilitas.mapNotNull { it.detail?.nmFasilitas }.joinToString(", ")
+                            )
+                        }
+                        resultList.addAll(mappedData)
+                        adapter.notifyDataSetChanged()
+                    } else {
+                         Toast.makeText(this@SearchActivity, "No results found", Toast.LENGTH_SHORT).show()
+                         adapter.notifyDataSetChanged()
+                    }
+                } else {
+                    Log.e("SearchActivity", "Error: ${response.message()}")
+                    Toast.makeText(this@SearchActivity, "Search failed", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<PropertyResponse>, t: Throwable) {
+                Log.e("SearchActivity", "Failure: ${t.message}")
+                Toast.makeText(this@SearchActivity, "Network error", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 }

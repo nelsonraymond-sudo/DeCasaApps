@@ -51,44 +51,99 @@ class HistoryFragment : Fragment() {
         }
 
         val apiService = RetrofitClient.instance.create(Api::class.java)
-        apiService.getHistory(userId).enqueue(object : Callback<HistoryResponse> {
+        // Call endpoint directly, Auth token handles user identification
+        apiService.getHistory().enqueue(object : Callback<com.google.gson.JsonElement> {
             override fun onResponse(
-                call: Call<HistoryResponse>, 
-                response: Response<HistoryResponse>
+                call: Call<com.google.gson.JsonElement>, 
+                response: Response<com.google.gson.JsonElement>
             ) {
-                val body = response.body()
-                if (response.isSuccessful && body != null) {
-                    val list = body.data.map { item ->
-                        HistoryItem(
-                            id = item.bookingId,
-                            propertyName = item.propertyName,
-                            location = item.location,
-                            price = item.price,
-                            date = parseDateToLong(item.date),
-                            imageUrl = item.imageUrl,
-                            status = item.status
-                        )
-                    }.toMutableList()
+                if (response.isSuccessful && response.body() != null) {
+                    val rawJson = response.body().toString()
+                    android.util.Log.d("HISTORY_RAW_JSON", rawJson)
+                    
+                    try {
+                        val jsonElement = com.google.gson.JsonParser.parseString(rawJson)
+                        val historyArray = if (jsonElement.isJsonArray) {
+                            jsonElement.asJsonArray
+                        } else if (jsonElement.isJsonObject && jsonElement.asJsonObject.has("data") && jsonElement.asJsonObject.get("data").isJsonArray) {
+                            jsonElement.asJsonObject.get("data").asJsonArray
+                        } else {
+                            com.google.gson.JsonArray()
+                        }
 
-                    if (list.isNotEmpty()) {
-                        list.sortByDescending { it.date }
-                        rv.adapter = HistoryAdapter(list)
-                        rv.visibility = View.VISIBLE
-                        emptyView.visibility = View.GONE
-                    } else {
+                        val list = mutableListOf<HistoryItem>()
+                        for (element in historyArray) {
+                            if (element.isJsonObject) {
+                                val obj = element.asJsonObject
+                                
+                                // Core Transaction Fields matching 'Transaksi' model
+                                val id = if (obj.has("id_trans")) obj.get("id_trans").asString else if (obj.has("id")) obj.get("id").asString else ""
+                                val price = if (obj.has("total_harga")) obj.get("total_harga").asString else if (obj.has("price")) obj.get("price").asString else ""
+                                val dateStr = if (obj.has("tgl_trans")) obj.get("tgl_trans").asString else if (obj.has("date")) obj.get("date").asString else ""
+                                val status = if (obj.has("status")) obj.get("status").asString else "Success"
+
+                                // Nested Property Fields
+                                var name = "Unknown Property"
+                                var loc = ""
+                                var img = ""
+
+                                if (obj.has("properti") && !obj.get("properti").isJsonNull) {
+                                    val propObj = obj.get("properti").asJsonObject
+                                    name = if (propObj.has("nm_properti")) propObj.get("nm_properti").asString else name
+                                    loc = if (propObj.has("lokasi")) propObj.get("lokasi").asString else loc
+                                    
+                                    // Handle Foto (could be array or single object depending on relation)
+                                    if (propObj.has("foto") && !propObj.get("foto").isJsonNull) {
+                                        val fotoElement = propObj.get("foto")
+                                        if (fotoElement.isJsonArray && fotoElement.asJsonArray.size() > 0) {
+                                           val firstFoto = fotoElement.asJsonArray.get(0).asJsonObject
+                                           img = if (firstFoto.has("url_foto")) firstFoto.get("url_foto").asString else ""
+                                        }
+                                    }
+                                }
+
+                                list.add(HistoryItem(
+                                    id = id,
+                                    propertyName = name,
+                                    location = loc,
+                                    price = price,
+                                    date = parseDateToLong(dateStr),
+                                    imageUrl = img,
+                                    status = status
+                                ))
+                            }
+                        }
+
+                        if (list.isNotEmpty()) {
+                            list.sortByDescending { it.date }
+                            rv.adapter = HistoryAdapter(list)
+                            rv.visibility = View.VISIBLE
+                            emptyView.visibility = View.GONE
+                        } else {
+                            rv.visibility = View.GONE
+                            emptyView.visibility = View.VISIBLE
+                            android.util.Log.d("HISTORY", "Empty list parsed")
+                        }
+                    } catch (e: Exception) {
+                        android.util.Log.e("HISTORY_ERROR", "Parse error: ${e.message}")
+                        // Only toast debugging info
+                        // android.widget.Toast.makeText(context, "History Parse Error: ${e.message}", android.widget.Toast.LENGTH_SHORT).show()
                         rv.visibility = View.GONE
                         emptyView.visibility = View.VISIBLE
                     }
                 } else {
+                    val errorBody = response.errorBody()?.string()
+                    android.util.Log.e("HISTORY_FAIL", "Response Error: $errorBody")
                     rv.visibility = View.GONE
                     emptyView.visibility = View.VISIBLE
                 }
             }
 
-            override fun onFailure(call: Call<HistoryResponse>, t: Throwable) {
+            override fun onFailure(call: Call<com.google.gson.JsonElement>, t: Throwable) {
                 rv.visibility = View.GONE
                 emptyView.visibility = View.VISIBLE
-                android.widget.Toast.makeText(context, "Error: ${t.message}", android.widget.Toast.LENGTH_SHORT).show()
+                android.widget.Toast.makeText(context, "Connection Error: ${t.message}", android.widget.Toast.LENGTH_SHORT).show()
+                android.util.Log.e("HISTORY_FAIL", "Failure: ${t.message}", t)
             }
         })
     }

@@ -27,22 +27,43 @@ class VerificationFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_verification, container, false)
-
-        // Initialize verify button
-        val verifyButton = view.findViewById<MaterialButton>(R.id.verifyButton)
-
-        // Set click listener untuk navigasi ke ProfileActivity
-        verifyButton.setOnClickListener {
-            navigateToProfile()
+        return try {
+            val view = inflater.inflate(R.layout.fragment_verification, container, false)
+            
+            val verifyButton = view.findViewById<MaterialButton>(R.id.verifyButton)
+            verifyButton.setOnClickListener { navigateToProfile() }
+            
+            view
+        } catch (e: Exception) {
+            android.util.Log.e("VerificationFragment", "Error creating view", e)
+            android.widget.Toast.makeText(context, "Error loading screen: ${e.message}", android.widget.Toast.LENGTH_LONG).show()
+            // Return a fallback view or null to prevent crash, though null might cause issues upstream
+            // Better to return an empty FrameLayout or similar if desperate, but reporting error is key.
+            // For now, rethrow or return null? If we return null, the activity might handle it or crash differently.
+            // Let's return a simple error view
+            val errorView = android.widget.TextView(context)
+            errorView.text = "Error loading Verification: ${e.message}"
+            errorView.setTextColor(android.graphics.Color.RED)
+            errorView
         }
-
-        return view
     }
 
     private fun navigateToProfile() {
-        val intent = Intent(requireActivity(), ProfileActivity::class.java)
-        startActivity(intent)
+        try {
+            if (isAdded && activity != null) {
+                val intent = Intent(requireActivity(), ProfileActivity::class.java)
+                // Clear back stack so user can't go back to verification
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                requireActivity().finish()
+            } else {
+                android.util.Log.e("VerificationFragment", "Navigation failed: Fragment not attached")
+                android.widget.Toast.makeText(context, "Navigation Warning: Fragment not attached", android.widget.Toast.LENGTH_SHORT).show()
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("VerificationFragment", "Navigation error", e)
+            android.widget.Toast.makeText(context, "Error navigating: ${e.message}", android.widget.Toast.LENGTH_LONG).show()
+        }
     }
 
     companion object {

@@ -1,5 +1,6 @@
 package com.example.decasaapps.adapter
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,11 +8,23 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.decasaapps.DetailActivity
+import com.example.decasaapps.PropertyData
 import com.example.decasaapps.R
-import com.example.decasaapps.model.PropertyData
 
-class PropertyAdapter(private var listProperty: List<PropertyData>) :
-    RecyclerView.Adapter<PropertyAdapter.ViewHolder>() {
+class PropertyAdapter(
+    private val propertyList: List<PropertyData>,
+    private val initialFavoriteState: Boolean = false,
+    private val onFavoriteClick: (PropertyData, Boolean) -> Unit
+) : RecyclerView.Adapter<PropertyAdapter.ViewHolder>() {
+
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val propertyImage: ImageView = view.findViewById(R.id.ivProperty)
+        val propertyName: TextView = view.findViewById(R.id.tvPropertyName)
+        val propertyLocation: TextView = view.findViewById(R.id.tvLocation)
+        val ratingText: TextView = view.findViewById(R.id.tvRating)
+        val favoriteIcon: ImageView = view.findViewById(R.id.ivFavorite)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -20,62 +33,57 @@ class PropertyAdapter(private var listProperty: List<PropertyData>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = listProperty[position]
+        val property = propertyList[position]
 
-        // 1. Set Nama
-        holder.tvNama.text = item.namaProperti
+        // Set Data ke Tampilan
+        holder.propertyName.text = property.name
+        holder.propertyLocation.text = property.location
+        holder.ratingText.text = "⭐ ${property.rating}"
 
-        // 2. Set Lokasi (Alamat)
-        holder.tvAlamat.text = item.alamat
+        // Load Gambar pakai Glide
+        Glide.with(holder.itemView.context)
+            .load(property.imageUrl)
+            .centerCrop()
+            .into(holder.propertyImage)
 
-        // 3. Set Rating
-        holder.tvRating.text = item.rating
-
-        // 4. Set Harga (SAYA KOMENTARI DULU KARENA DI XML TIDAK ADA)
-        // Jika nanti kamu tambah TextView harga di XML, hapus tanda // di bawah ini:
-        // holder.tvHarga.text = item.harga
-
-        // 5. Load Gambar
-        if (!item.fotoUrl.isNullOrEmpty()) {
-            Glide.with(holder.itemView.context)
-                .load(item.fotoUrl)
-                .into(holder.imgProperti)
+        // Fitur Favorite (Toggle Icon)
+        var isFavorite = initialFavoriteState
+        holder.favoriteIcon.setImageResource(
+            if (isFavorite) android.R.drawable.btn_star_big_on
+            else android.R.drawable.btn_star_big_off
+        )
+        
+        holder.favoriteIcon.setOnClickListener {
+            isFavorite = !isFavorite
+            holder.favoriteIcon.setImageResource(
+                if (isFavorite) android.R.drawable.btn_star_big_on
+                else android.R.drawable.btn_star_big_off
+            )
+            onFavoriteClick(property, isFavorite)
         }
 
-        // 6. Click Listener -> Pindah ke DetailActivity
+        // --- BAGIAN PENTING: KLIK PINDAH KE DETAIL ---
         holder.itemView.setOnClickListener {
-            val context = holder.itemView.context
-            val intent = android.content.Intent(context, com.example.decasaapps.DetailActivity::class.java)
-            
-            intent.putExtra("EXTRA_NAME", item.namaProperti)
-            intent.putExtra("EXTRA_LOCATION", item.alamat)
-            intent.putExtra("EXTRA_RATING", item.rating)
-            intent.putExtra("EXTRA_IMAGE", item.fotoUrl)
-            intent.putExtra("EXTRA_PRICE", item.harga)
-            intent.putExtra("EXTRA_ID", item.id)
-            
-            context.startActivity(intent)
+            // 1. Siapkan Niat (Intent) mau pindah ke DetailActivity
+            val intent = Intent(holder.itemView.context, DetailActivity::class.java)
+
+            // 2. Masukkan data yang mau dikirim (Packing Data)
+            intent.putExtra("EXTRA_NAME", property.name)
+            intent.putExtra("EXTRA_LOCATION", property.location)
+            intent.putExtra("EXTRA_RATING", property.rating.toString())
+            intent.putExtra("EXTRA_IMAGE", property.imageUrl)
+            intent.putExtra("EXTRA_PRICE", property.price)
+            intent.putExtra("EXTRA_ID", property.serverId)
+            intent.putExtra("EXTRA_DESCRIPTION", property.description)
+            intent.putExtra("EXTRA_CATEGORY", property.category)
+            intent.putExtra("EXTRA_STATUS", property.status)
+            intent.putExtra("EXTRA_OWNER", property.owner)
+            intent.putExtra("EXTRA_FACILITIES", property.facilities)
+
+            // 3. Berangkat!
+            holder.itemView.context.startActivity(intent)
         }
     }
 
-    override fun getItemCount(): Int {
-        return listProperty.size
-    }
-
-    fun setData(newList: List<PropertyData>) {
-        listProperty = newList
-        notifyDataSetChanged()
-    }
-
-    // --- BAGIAN INI SUDAH SAYA SESUAIKAN DENGAN XML KAMU ---
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        // ID sesuai dengan item_property.xml
-        val tvNama: TextView = itemView.findViewById(R.id.tvPropertyName)
-        val tvAlamat: TextView = itemView.findViewById(R.id.tvLocation)
-        val tvRating: TextView = itemView.findViewById(R.id.tvRating)
-        val imgProperti: ImageView = itemView.findViewById(R.id.ivProperty)
-
-        // Harga saya hapus dulu karena di XML belum ada
-        // val tvHarga: TextView = itemView.findViewById(R.id.tvPrice)
-    }
+    override fun getItemCount() = propertyList.size
 }

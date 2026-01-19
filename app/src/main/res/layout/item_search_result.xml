@@ -98,7 +98,7 @@
                         android:layout_width="14dp"
                         android:layout_height="14dp"
                         android:src="@drawable/ic_location_pin"
-                        app:tint="#6200EE" />
+                        app:tint="@color/primary1" />
 
                     <TextView
                         android:id="@+id/tvLocation"
